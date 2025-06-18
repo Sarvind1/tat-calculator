@@ -1,0 +1,79 @@
+{
+  "stages": {
+    "1": {
+      "name": "01. PO Approval Pending",
+      "preceding_stage": null,
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "handoff_points": ["Procurement"],
+        "process_type": "approval",
+        "team_owner": "Procurement"
+      },
+      "fallback_calculation": {
+        "expression": "po_created_date"
+      },
+      "lead_time": 2
+    },
+    "2": {
+      "name": "02. Supplier Confirmation Pending",
+      "preceding_stage": ["1"],
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "handoff_points": ["Procurement"],
+        "process_type": "confirmation",
+        "team_owner": "Procurement"
+      },
+      "fallback_calculation": {
+        "expression": "max(po_approval_date, add_days(po_created_date, 2))"
+      },
+      "lead_time": 3
+    },
+    "3": {
+      "name": "03. PI Upload Pending",
+      "preceding_stage": ["2"],
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "handoff_points": ["Procurement"],
+        "process_type": "documentation",
+        "team_owner": "Procurement"
+      },
+      "fallback_calculation": {
+        "expression": "max(supplier_confirmation_date, add_days(po_approval_date, 3))"
+      },
+      "lead_time": 1
+    },
+    "4": {
+      "name": "04. PI Approval Pending",
+      "preceding_stage": ["3"],
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "handoff_points": ["Finance"],
+        "process_type": "approval",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": "max(supplier_confirmation_date, add_days(po_approval_date, 5))"
+      },
+      "lead_time": 2
+    },
+    "5": {
+      "name": "05. PI Payment Pending",
+      "preceding_stage": ["4"],
+      "process_flow": {
+        "critical_path": true,
+        "parallel_processes": [],
+        "handoff_points": ["Finance"],
+        "process_type": "payment",
+        "team_owner": "Finance"
+      },
+      "fallback_calculation": {
+        "expression": "max(pi_invoice_approval_date, add_days(supplier_confirmation_date, 2))"
+      },
+      "lead_time": 5
+    }
+  }
+}
