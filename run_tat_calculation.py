@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 class TATRunner:
     """Complete TAT calculation runner with enhanced reporting"""
     
-    def __init__(self, excel_file: str = "ts_small.xlsx", config_file: str = "stages_config.json"):
+    def __init__(self, excel_file: str = "ts_small_1.xlsx", config_file: str = "stages_config.json"):
         self.excel_file = excel_file
         self.config_file = config_file
         self.df = None
@@ -205,7 +205,7 @@ def main():
         runner.setup()
         
         # Run calculations (start with sample for testing)
-        sample_size = 5  # Process first 5 POs for testing
+        sample_size = None  # Process first 5 POs for testing
         print(f"\nRunning calculations on sample of {sample_size} POs...")
         results = runner.run_calculations(sample_size=sample_size)
         
