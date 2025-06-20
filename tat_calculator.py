@@ -225,7 +225,9 @@ class TATCalculator:
                     # Single value, convert to list
                     return [str(result)], f"Evaluated: {expression} = [{result}]"
                 else:
-                    return [], f"Evaluation failed: {expression}"
+                    # If evaluation failed, return empty list
+                    logger.warning(f"Expression evaluation returned None: {expression}")
+                    return [], f"Evaluation failed: {expression} (returned None)"
             else:
                 # For datetime expressions
                 if isinstance(result, datetime):
@@ -245,6 +247,10 @@ class TATCalculator:
         if isinstance(node, ast.Name):
             # Field name - look up in PO data
             value = po_row.get(node.id)
+            # Handle missing fields gracefully
+            if value is None and node.id not in po_row.index:
+                logger.warning(f"Field '{node.id}' not found in PO data, treating as None")
+                return None
             # For datetime return type, try to convert to datetime
             if return_type == "datetime" and value is not None and not isinstance(value, datetime):
                 return self._get_date_value(node.id, po_row)
@@ -259,6 +265,10 @@ class TATCalculator:
                     # if(condition, true_val, false_val)
                     if len(node.args) == 3:
                         condition = self._eval_node(node.args[0], po_row, "raw")
+                        # Handle None condition (e.g., missing field)
+                        if condition is None:
+                            logger.warning(f"Condition evaluated to None in if expression, defaulting to false branch")
+                            condition = False
                         # Evaluate condition
                         if condition:
                             return self._eval_node(node.args[1], po_row, return_type)
@@ -293,6 +303,11 @@ class TATCalculator:
         elif isinstance(node, ast.Compare):
             # Handle comparisons like pi_applicable == 1
             left = self._eval_node(node.left, po_row, "raw")
+            # Handle None values in comparisons
+            if left is None:
+                logger.warning(f"Left side of comparison is None")
+                return False
+            
             if len(node.ops) == 1 and len(node.comparators) == 1:
                 right = self._eval_node(node.comparators[0], po_row, "raw")
                 op = node.ops[0]
@@ -301,13 +316,13 @@ class TATCalculator:
                 elif isinstance(op, ast.NotEq):
                     return left != right
                 elif isinstance(op, ast.Lt):
-                    return left < right
+                    return left < right if left is not None and right is not None else False
                 elif isinstance(op, ast.LtE):
-                    return left <= right
+                    return left <= right if left is not None and right is not None else False
                 elif isinstance(op, ast.Gt):
-                    return left > right
+                    return left > right if left is not None and right is not None else False
                 elif isinstance(op, ast.GtE):
-                    return left >= right
+                    return left >= right if left is not None and right is not None else False
             return False
         
         elif isinstance(node, ast.Constant):
@@ -391,7 +406,11 @@ class TATCalculator:
                 preceding_stage_ids = stage.preceding_stage
             elif isinstance(stage.preceding_stage, str) and stage.preceding_stage.startswith('if('):
                 # Expression that needs evaluation
-                preceding_stage_ids, _ = self._evaluate_expression(stage.preceding_stage, po_row, return_type="stage_list")
+                preceding_stage_ids, eval_formula = self._evaluate_expression(stage.preceding_stage, po_row, return_type="stage_list")
+                logger.info(f"Stage {stage_id} conditional dependency: {eval_formula}")
+                if not preceding_stage_ids:
+                    logger.warning(f"Stage {stage_id} conditional dependency returned empty list")
+                    calc_details["dependencies_error"] = f"Conditional dependency evaluation failed: {eval_formula}"
             else:
                 # Single stage ID as string
                 preceding_stage_ids = [stage.preceding_stage] if stage.preceding_stage else []
@@ -597,6 +616,10 @@ class TATCalculator:
                 "expression": calc_details.get("source"),
                 "reason": "Using fallback calculation"
             })
+        
+        # Add any error information
+        if "dependencies_error" in calc_details:
+            summary["error"] = calc_details["dependencies_error"]
         
         return summary
     
