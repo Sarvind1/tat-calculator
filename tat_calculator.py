@@ -57,7 +57,7 @@ class StageConfig(BaseModel):
     @validator('preceding_stage')
     def validate_preceding_stage(cls, v):
         """Convert single string to list for consistency"""
-        if isinstance(v, str):
+        if isinstance(v, str) and not v.startswith('if('):
             return [v]
         return v
 
@@ -119,7 +119,13 @@ class TATCalculator:
         # Build dependency graph
         graph = {}
         for stage_id, stage in self.config.stages.items():
-            graph[stage_id] = stage.preceding_stage or []
+            if isinstance(stage.preceding_stage, list):
+                graph[stage_id] = stage.preceding_stage
+            elif isinstance(stage.preceding_stage, str) and stage.preceding_stage.startswith('if('):
+                # For conditional dependencies, we'll validate them during runtime
+                graph[stage_id] = []
+            else:
+                graph[stage_id] = []
         
         # Check for cycles using DFS
         visited = set()
@@ -187,69 +193,122 @@ class TATCalculator:
                 
         return None
     
-    def _evaluate_expression(self, expression: str, po_row: pd.Series) -> Tuple[Optional[datetime], str]:
+    def _evaluate_expression(self, expression: str, po_row: pd.Series, return_type: str = "datetime") -> Tuple[Any, str]:
         """
         Evaluate dynamic expressions with custom functions
         
         Supported functions:
         - max(date1, date2, ...): Returns latest datetime
         - add_days(date, days): Adds days to a date
+        - if(condition, true_val, false_val): Conditional evaluation
         
         Args:
             expression: Expression string to evaluate
             po_row: PO data for field resolution
+            return_type: Expected return type ("datetime" or "stage_list")
             
         Returns:
-            Tuple of (result_datetime, formula_description)
+            Tuple of (result, formula_description)
         """
         try:
             # Parse expression into AST
             tree = ast.parse(expression, mode='eval')
-            result = self._eval_node(tree.body, po_row)
+            result = self._eval_node(tree.body, po_row, return_type)
             
-            if isinstance(result, datetime):
-                return result, f"Calculation: {expression} = {result.strftime('%Y-%m-%d %H:%M:%S')}"
+            if return_type == "stage_list":
+                # For stage dependencies, ensure we return a list of strings
+                if isinstance(result, list):
+                    # Convert integers to strings
+                    result = [str(item) for item in result]
+                    return result, f"Evaluated: {expression} = {result}"
+                elif result is not None:
+                    # Single value, convert to list
+                    return [str(result)], f"Evaluated: {expression} = [{result}]"
+                else:
+                    return [], f"Evaluation failed: {expression}"
             else:
-                return None, f"Calculation failed: {expression}"
+                # For datetime expressions
+                if isinstance(result, datetime):
+                    return result, f"Calculation: {expression} = {result.strftime('%Y-%m-%d %H:%M:%S')}"
+                else:
+                    return None, f"Calculation failed: {expression}"
                 
         except Exception as e:
             logger.error(f"Error evaluating expression '{expression}': {e}")
-            return None, f"Calculation error: {expression} ({str(e)})"
+            if return_type == "stage_list":
+                return [], f"Evaluation error: {expression} ({str(e)})"
+            else:
+                return None, f"Calculation error: {expression} ({str(e)})"
     
-    def _eval_node(self, node: ast.AST, po_row: pd.Series) -> Any:
+    def _eval_node(self, node: ast.AST, po_row: pd.Series, return_type: str = "datetime") -> Any:
         """Recursively evaluate AST nodes"""
         if isinstance(node, ast.Name):
-            # Field name - look up in PO data (return raw value, not just date)
-            return po_row.get(node.id)
+            # Field name - look up in PO data
+            value = po_row.get(node.id)
+            # For datetime return type, try to convert to datetime
+            if return_type == "datetime" and value is not None and not isinstance(value, datetime):
+                return self._get_date_value(node.id, po_row)
+            return value
         
         elif isinstance(node, ast.Call):
             # Function call
             if isinstance(node.func, ast.Name):
                 func_name = node.func.id
-                args = [self._eval_node(arg, po_row) for arg in node.args]
                 
-                if func_name == 'max':
-                    # Return latest non-None datetime
+                if func_name == 'if':
+                    # if(condition, true_val, false_val)
+                    if len(node.args) == 3:
+                        condition = self._eval_node(node.args[0], po_row, "raw")
+                        # Evaluate condition
+                        if condition:
+                            return self._eval_node(node.args[1], po_row, return_type)
+                        else:
+                            return self._eval_node(node.args[2], po_row, return_type)
+                    return None
+                
+                elif func_name == 'max' and return_type == "datetime":
+                    # For datetime max
+                    args = [self._eval_node(arg, po_row, "datetime") for arg in node.args]
                     valid_dates = [arg for arg in args if isinstance(arg, datetime)]
                     return max(valid_dates) if valid_dates else None
                 
-                elif func_name == 'add_days':
-                    if len(args) >= 2 and isinstance(args[0], datetime) and isinstance(args[1], (int, float)):
-                        return args[0] + timedelta(days=int(args[1]))
+                elif func_name == 'add_days' and return_type == "datetime":
+                    # add_days function
+                    if len(node.args) >= 2:
+                        date_arg = self._eval_node(node.args[0], po_row, "datetime")
+                        days_arg = self._eval_node(node.args[1], po_row, "raw")
+                        if isinstance(date_arg, datetime) and isinstance(days_arg, (int, float)):
+                            return date_arg + timedelta(days=int(days_arg))
                     return None
                 
-                elif func_name == 'if':
-                    # if(condition, true_val, false_val)
-                    if len(args) == 3:
-                        condition, true_val, false_val = args
-                        return true_val if condition else false_val
-                    return None
                 else:
-                    raise ValueError(f"Unknown function: {func_name}")
+                    # For other functions, evaluate args with appropriate type
+                    args = [self._eval_node(arg, po_row, "raw") for arg in node.args]
+                    return args[0] if args else None
         
         elif isinstance(node, ast.List):
             # Support for list literals like [5], [2]
-            return [self._eval_node(elt, po_row) for elt in node.elts]
+            return [self._eval_node(elt, po_row, "raw") for elt in node.elts]
+        
+        elif isinstance(node, ast.Compare):
+            # Handle comparisons like pi_applicable == 1
+            left = self._eval_node(node.left, po_row, "raw")
+            if len(node.ops) == 1 and len(node.comparators) == 1:
+                right = self._eval_node(node.comparators[0], po_row, "raw")
+                op = node.ops[0]
+                if isinstance(op, ast.Eq):
+                    return left == right
+                elif isinstance(op, ast.NotEq):
+                    return left != right
+                elif isinstance(op, ast.Lt):
+                    return left < right
+                elif isinstance(op, ast.LtE):
+                    return left <= right
+                elif isinstance(op, ast.Gt):
+                    return left > right
+                elif isinstance(op, ast.GtE):
+                    return left >= right
+            return False
         
         elif isinstance(node, ast.Constant):
             # Literal value
@@ -325,39 +384,51 @@ class TATCalculator:
         if stage.preceding_stage:
             dependencies = []
             preceding_timestamps = []
-            # preceding_stage is always a string expression (industry standard)
-            preceding_stage_ids, _ = self._evaluate_expression(stage.preceding_stage, po_row)
-            if not isinstance(preceding_stage_ids, list):
-                preceding_stage_ids = [preceding_stage_ids]
+            
+            # Handle different types of preceding_stage
+            if isinstance(stage.preceding_stage, list):
+                # Simple list of stage IDs
+                preceding_stage_ids = stage.preceding_stage
+            elif isinstance(stage.preceding_stage, str) and stage.preceding_stage.startswith('if('):
+                # Expression that needs evaluation
+                preceding_stage_ids, _ = self._evaluate_expression(stage.preceding_stage, po_row, return_type="stage_list")
+            else:
+                # Single stage ID as string
+                preceding_stage_ids = [stage.preceding_stage] if stage.preceding_stage else []
+            
+            # Calculate timestamps for all preceding stages
             for prec_stage_id in preceding_stage_ids:
-                prec_timestamp, prec_details = self.calculate_adjusted_timestamp(prec_stage_id, po_row)
-                if prec_timestamp:
-                    preceding_timestamps.append(prec_timestamp)
-                    dependencies.append({
-                        "stage_id": prec_stage_id,
-                        "stage_name": self.config.stages[prec_stage_id].name,
-                        "timestamp": prec_timestamp.isoformat(),
-                        "method": prec_details["method"] if isinstance(prec_details, dict) else "legacy"
-                    })
+                if prec_stage_id and prec_stage_id in self.config.stages:
+                    prec_timestamp, prec_details = self.calculate_adjusted_timestamp(prec_stage_id, po_row)
+                    if prec_timestamp:
+                        preceding_timestamps.append(prec_timestamp)
+                        dependencies.append({
+                            "stage_id": prec_stage_id,
+                            "stage_name": self.config.stages[prec_stage_id].name,
+                            "timestamp": prec_timestamp.isoformat(),
+                            "method": prec_details.get("method", "unknown") if isinstance(prec_details, dict) else "legacy"
+                        })
+            
             calc_details["dependencies"] = dependencies
+            
             if preceding_timestamps:
                 base_timestamp = max(preceding_timestamps)
                 precedence_timestamp = base_timestamp + timedelta(days=stage.lead_time)
                 calc_details["precedence_value"] = precedence_timestamp.isoformat()
                 calc_details["base_date"] = base_timestamp.isoformat()
         
-        # 2. Extract and get actual timestamp (evaluate as expression or field)
+        # 2. Extract and get actual timestamp
         actual_timestamp = None
         actual_formula = None
         if stage.actual_timestamp:
-            actual_timestamp, actual_formula = self._evaluate_expression(stage.actual_timestamp, po_row)
+            actual_timestamp, actual_formula = self._evaluate_expression(stage.actual_timestamp, po_row, return_type="datetime")
             calc_details["actual_field"] = stage.actual_timestamp
             if actual_timestamp:
                 calc_details["actual_value"] = actual_timestamp.isoformat()
         
         # 3. Determine final timestamp and method
         final_timestamp = None
-        print("precednce and actual", precedence_timestamp,"__---___", actual_timestamp)
+        
         if precedence_timestamp and actual_timestamp:
             if actual_timestamp >= precedence_timestamp:
                 final_timestamp = actual_timestamp
@@ -368,31 +439,28 @@ class TATCalculator:
             else:
                 final_timestamp = precedence_timestamp
                 calc_details["method"] = "precedence_over_actual"
-                calc_details["source"] = f"Stage {stage.preceding_stage[0]}'s timestamp"
-                calc_details["decision_reason"] = f"Precedence stage's timestamp ({precedence_timestamp.strftime('%Y-%m-%d')}) is later than actual ({actual_timestamp.strftime('%Y-%m-%d')})"
+                calc_details["source"] = f"Max of preceding stages + {stage.lead_time} days"
+                calc_details["decision_reason"] = f"Precedence calculation ({precedence_timestamp.strftime('%Y-%m-%d')}) is later than actual ({actual_timestamp.strftime('%Y-%m-%d')})"
                 calc_details["final_choice"] = "precedence"
-                
         
         elif actual_timestamp:
             final_timestamp = actual_timestamp
             calc_details["method"] = "actual_only"
             calc_details["source"] = actual_formula
-            calc_details["decision_reason"] = "Using actual timestamp"
+            calc_details["decision_reason"] = "Using actual timestamp (no precedence available)"
             calc_details["final_choice"] = "actual"
         
         elif precedence_timestamp:
-            final_timestamp = precedence_timestamp + timedelta(days=stage.lead_time)
-            calc_details["method"] = "precendence stage timestamp + current stage lead time"
-            calc_details["source"] = f"Stage {stage.preceding_stage[0]} + {stage.lead_time} days"
-            calc_details["decision_reason"] = "No actual timestamp available, using precedence stage + LT calculation"
+            final_timestamp = precedence_timestamp
+            calc_details["method"] = "precedence_only"
+            calc_details["source"] = f"Max of preceding stages + {stage.lead_time} days"
+            calc_details["decision_reason"] = "No actual timestamp available, using precedence calculation"
             calc_details["final_choice"] = "precedence"
-            
-
         
         # 4. Fallback calculation if no valid timestamp
         if not final_timestamp:
             fallback_result, fallback_formula = self._evaluate_expression(
-                stage.fallback_calculation.expression, po_row
+                stage.fallback_calculation.expression, po_row, return_type="datetime"
             )
             if fallback_result:
                 final_timestamp = fallback_result + timedelta(days=stage.lead_time)
