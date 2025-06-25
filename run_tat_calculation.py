@@ -35,6 +35,7 @@ class TATRunner:
         self.df = None
         self.calculator = None
         self.results = []
+        self.delay_results = []
         
     def setup(self):
         """Set up the calculator and load data"""
@@ -129,7 +130,7 @@ class TATRunner:
             logger.error(f"Error initializing calculator: {e}")
             raise
     
-    def run_calculations(self, sample_size: int = None):
+    def run_calculations(self, sample_size: int = None, calculate_delays: bool = True):
         """Run TAT calculations on all or sample of POs"""
         if sample_size:
             df_to_process = self.df.head(sample_size)
@@ -139,6 +140,7 @@ class TATRunner:
             logger.info(f"Processing all {len(df_to_process)} POs")
         
         self.results = []
+        self.delay_results = []
         errors = []
         
         for index, row in df_to_process.iterrows():
@@ -146,8 +148,14 @@ class TATRunner:
                 po_id = row.get('po_razin_id', f'Row_{index}')
                 logger.info(f"Processing PO {index + 1}/{len(df_to_process)}: {po_id}")
                 
+                # Calculate TAT
                 result = self.calculator.calculate_tat(row)
                 self.results.append(result)
+                
+                # Calculate delays if requested and method exists
+                if calculate_delays and hasattr(self.calculator, 'calculate_delay'):
+                    delay_result = self.calculator.calculate_delay(result, row)
+                    self.delay_results.append(delay_result)
                 
             except Exception as e:
                 error_info = {
@@ -188,6 +196,21 @@ class TATRunner:
         logger.info(f"Results saved to: {filename}")
         return filename
     
+    def save_delay_results(self, filename_prefix: str = "delay_results"):
+        """Save delay analysis results to JSON file"""
+        if not self.delay_results:
+            logger.warning("No delay results to save")
+            return
+        
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"{filename_prefix}_{timestamp}.json"
+        
+        with open(filename, 'w') as f:
+            json.dump(self.delay_results, f, indent=2, default=str)
+        
+        logger.info(f"Delay results saved to: {filename}")
+        return filename
+    
     def export_to_excel(self, filename_prefix: str = "tat_export"):
         """Export original data + calculated timestamps to Excel"""
         if not self.results:
@@ -199,11 +222,27 @@ class TATRunner:
         
         self.calculator.export_to_excel(self.df, self.results, filename)
         return filename
+    
+    def export_delay_report(self, filename_prefix: str = "delay_report"):
+        """Export delay analysis report to Excel"""
+        if not self.delay_results:
+            logger.warning("No delay results to export")
+            return
+        
+        if not hasattr(self.calculator, 'export_delay_report'):
+            logger.warning("Delay report export not available in current calculator version")
+            return
+        
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"{filename_prefix}_{timestamp}.xlsx"
+        
+        self.calculator.export_delay_report(self.delay_results, filename)
+        return filename
 
 
 def main():
     """Main execution function"""
-    print("TAT Calculation System - Starting...")
+    print("TAT Calculation System with Delay Analysis - Starting...")
     print("="*60)
     
     try:
@@ -216,18 +255,22 @@ def main():
         # Run calculations (start with sample for testing)
         sample_size = 5  # Process first 5 POs for testing
         print(f"\nRunning calculations on sample of {sample_size} POs...")
-        results = runner.run_calculations(sample_size=sample_size)
+        results = runner.run_calculations(sample_size=sample_size, calculate_delays=True)
         
         if results:
             # Save results
             results_file = runner.save_results()
+            delay_results_file = runner.save_delay_results()
             
             # Export to Excel
             excel_file = runner.export_to_excel()
+            delay_report_file = runner.export_delay_report()
             
             print(f"\nFiles Generated:")
-            print(f"- Results: {results_file}")
+            print(f"- TAT Results: {results_file}")
+            print(f"- Delay Analysis: {delay_results_file}")
             print(f"- Excel Export: {excel_file}")
+            print(f"- Delay Report: {delay_report_file}")
             print(f"- Logs: tat_calculation.log")
             
         print(f"\nTo process all POs, change sample_size=None in the run_calculations() call")
