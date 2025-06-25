@@ -110,13 +110,21 @@ class TATRunner:
         logger.info(f"Initializing TAT Calculator with config: {self.config_file}")
         
         try:
-            from tat_calculator import TATCalculator
+            # Import the new modular TATCalculator
+            from tat_calculator_main import TATCalculator
             self.calculator = TATCalculator(self.config_file)
             logger.info("TAT Calculator initialized successfully")
             
         except ImportError:
-            logger.error("TATCalculator not available. Please ensure tat_calculator.py is in the same directory.")
-            raise
+            # Fallback to old monolithic version if new modules not available
+            logger.warning("New modular TATCalculator not available, trying old version...")
+            try:
+                from tat_calculator import TATCalculator
+                self.calculator = TATCalculator(self.config_file)
+                logger.info("TAT Calculator (old version) initialized successfully")
+            except ImportError:
+                logger.error("No TATCalculator available. Please ensure tat_calculator_main.py or tat_calculator.py is in the same directory.")
+                raise
         except Exception as e:
             logger.error(f"Error initializing calculator: {e}")
             raise
