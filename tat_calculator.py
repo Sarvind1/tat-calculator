@@ -37,12 +37,7 @@ class FallbackCalculation(BaseModel):
     """Fallback calculation configuration"""
     expression: str
     
-    @validator('expression')
-    def validate_expression(cls, v):
-        """Validate that expression is not empty"""
-        if not v.strip():
-            raise ValueError("Expression cannot be empty")
-        return v
+
 
 
 class StageConfig(BaseModel):
@@ -54,12 +49,7 @@ class StageConfig(BaseModel):
     fallback_calculation: FallbackCalculation
     lead_time: int = Field(ge=0, description="Lead time in days")
     
-    @validator('preceding_stage')
-    def validate_preceding_stage(cls, v):
-        """Convert single string to list for consistency"""
-        if isinstance(v, str):
-            return [v]
-        return v
+
 
 
 class StagesConfig(BaseModel):
@@ -216,20 +206,108 @@ class TATCalculator:
             logger.error(f"Error evaluating expression '{expression}': {e}")
             return None, f"Calculation error: {expression} ({str(e)})"
     
+
     def _eval_node(self, node: ast.AST, po_row: pd.Series) -> Any:
         """Recursively evaluate AST nodes"""
         if isinstance(node, ast.Name):
-            # Field name - look up in PO data (return raw value, not just date)
+            var_name = node.id
+            # Check if it's a stage reference
+            if var_name.startswith('stage_'):
+                print ("Veriable name is", var_name)
+                stage_id = var_name.replace('stage_', '')
+                if stage_id in self.calculated_adjustments:
+                    timestamp, _ = self.calculated_adjustments[stage_id]
+                    return timestamp  # Already a datetime or None
+            
             return po_row.get(node.id)
         
+        elif isinstance(node, ast.Constant):
+            return node.value
+        
+        elif isinstance(node, ast.List):
+            # Handle list literals like ['5'], ['2']
+            return [self._eval_node(elt, po_row) for elt in node.elts]
+        
+        elif isinstance(node, ast.BinOp):
+            # Handle binary operations like +, -, *, /
+            left = self._eval_node(node.left, po_row)
+            right = self._eval_node(node.right, po_row)
+            
+            if left is None or right is None:
+                return None
+            
+            # Handle datetime arithmetic
+            if isinstance(node.op, ast.Add):
+                # For datetime + number (days)
+                if isinstance(left, datetime) and isinstance(right, (int, float)):
+                    return left + timedelta(days=right)
+                elif isinstance(right, datetime) and isinstance(left, (int, float)):
+                    return right + timedelta(days=left)
+                else:
+                    return left + right
+                    
+            elif isinstance(node.op, ast.Sub):
+                # For datetime - number (days)
+                if isinstance(left, datetime) and isinstance(right, (int, float)):
+                    return left - timedelta(days=right)
+                # For datetime - datetime (returns days)
+                elif isinstance(left, datetime) and isinstance(right, datetime):
+                    return (left - right).days
+                else:
+                    return left - right
+                    
+            elif isinstance(node.op, ast.Mult):
+                return left * right
+                
+            elif isinstance(node.op, ast.Div):
+                return left / right if right != 0 else None
+                
+            else:
+                logger.warning(f"Unsupported binary operation: {type(node.op)}")
+                return None
+    
+        
+        
+        elif isinstance(node, ast.Compare):
+            # Handle comparisons like pi_applicable==1
+            left = self._eval_node(node.left, po_row)
+            op = node.ops[0]
+            right = self._eval_node(node.comparators[0], po_row)
+            
+            if isinstance(op, ast.Eq):
+                return left == right
+            elif isinstance(op, ast.NotEq):
+                return left != right
+            elif isinstance(op, ast.Lt):
+                return left < right
+            elif isinstance(op, ast.LtE):
+                return left <= right
+            elif isinstance(op, ast.Gt):
+                return left > right
+            elif isinstance(op, ast.GtE):
+                return left >= right
+            else:
+                raise ValueError(f"Unsupported comparison operator: {type(op).__name__}")
+        
+        
         elif isinstance(node, ast.Call):
-            # Function call
             if isinstance(node.func, ast.Name):
                 func_name = node.func.id
+                
+                # Handle iff with lazy evaluation
+                if func_name == 'iff' or func_name == 'cond':
+                    if len(node.args) == 3:
+                        condition = self._eval_node(node.args[0], po_row)
+                        if condition:
+                            return self._eval_node(node.args[1], po_row)
+                        else:
+                            return self._eval_node(node.args[2], po_row)
+                    raise ValueError("iff requires exactly 3 arguments")
+                
+                # For other functions, evaluate arguments first
                 args = [self._eval_node(arg, po_row) for arg in node.args]
                 
                 if func_name == 'max':
-                    # Return latest non-None datetime
                     valid_dates = [arg for arg in args if isinstance(arg, datetime)]
                     return max(valid_dates) if valid_dates else None
                 
@@ -238,49 +316,12 @@ class TATCalculator:
                         return args[0] + timedelta(days=int(args[1]))
                     return None
                 
-                elif func_name == 'if':
-                    # if(condition, true_val, false_val)
-                    if len(args) == 3:
-                        condition, true_val, false_val = args
-                        return true_val if condition else false_val
-                    return None
                 else:
                     raise ValueError(f"Unknown function: {func_name}")
         
-        elif isinstance(node, ast.List):
-            # Support for list literals like [5], [2]
-            return [self._eval_node(elt, po_row) for elt in node.elts]
-        
-        elif isinstance(node, ast.Constant):
-            # Literal value
-            return node.value
-        
-        elif isinstance(node, ast.Num):  # For older Python versions
-            return node.n
-        
-        elif isinstance(node, ast.Str):  # For older Python versions
-            return node.s
-        
         else:
-            raise ValueError(f"Unsupported AST node type: {type(node)}")
-    
-    def _extract_actual_field(self, expression: str) -> Optional[str]:
-        """
-        Extract the 'actual' field from a max() expression
-        
-        For expressions like "max(actual_field, fallback)", returns "actual_field"
-        """
-        try:
-            tree = ast.parse(expression, mode='eval')
-            if isinstance(tree.body, ast.Call) and isinstance(tree.body.func, ast.Name):
-                if tree.body.func.id == 'max' and tree.body.args:
-                    first_arg = tree.body.args[0]
-                    if isinstance(first_arg, ast.Name):
-                        return first_arg.id
-        except:
-            pass
-        return None
-    
+            raise ValueError(f"Unsupported AST node type: {type(node).__name__}")
+
     def calculate_adjusted_timestamp(self, stage_id: str, po_row: pd.Series) -> Tuple[Optional[datetime], Dict[str, Any]]:
         """
         Calculate adjusted timestamp for a specific stage using priority logic:
@@ -310,7 +351,7 @@ class TATCalculator:
         calc_details = {
             "method": None,
             "source": None,
-            "base_date": None,
+            "target_date": None,
             "lead_time_applied": stage.lead_time,
             "decision_reason": None,
             "dependencies": [],
@@ -320,33 +361,56 @@ class TATCalculator:
             "final_choice": None
         }
         
+        # In calculate_adjusted_timestamp, replace the complex preceding_stage handling with:
+
         # 1. Calculate precedence-based timestamp
         precedence_timestamp = None
         if stage.preceding_stage:
             dependencies = []
             preceding_timestamps = []
-            # preceding_stage is always a string expression (industry standard)
-            preceding_stage_ids, _ = self._evaluate_expression(stage.preceding_stage, po_row)
-            if not isinstance(preceding_stage_ids, list):
-                preceding_stage_ids = [preceding_stage_ids]
+            
+            # Just evaluate the string expression - it always returns a list
+            result = self._eval_node(ast.parse(stage.preceding_stage, mode='eval').body, po_row)
+            preceding_stage_ids = result if isinstance(result, list) else []
+            
+            # Process the stage IDs
             for prec_stage_id in preceding_stage_ids:
-                prec_timestamp, prec_details = self.calculate_adjusted_timestamp(prec_stage_id, po_row)
-                if prec_timestamp:
-                    preceding_timestamps.append(prec_timestamp)
-                    dependencies.append({
-                        "stage_id": prec_stage_id,
-                        "stage_name": self.config.stages[prec_stage_id].name,
-                        "timestamp": prec_timestamp.isoformat(),
-                        "method": prec_details["method"] if isinstance(prec_details, dict) else "legacy"
-                    })
+                prec_stage_id = str(prec_stage_id)
+                if prec_stage_id in self.config.stages:
+                    prec_timestamp, prec_details = self.calculate_adjusted_timestamp(prec_stage_id, po_row)
+                    if prec_timestamp:
+                        preceding_timestamps.append(prec_timestamp)
+                        dependencies.append({
+                            "stage_id": prec_stage_id,
+                            "stage_name": self.config.stages[prec_stage_id].name,
+                            "timestamp": prec_timestamp.isoformat(),
+                            "method": prec_details["method"] if isinstance(prec_details, dict) else "legacy"
+                        })
+            
             calc_details["dependencies"] = dependencies
             if preceding_timestamps:
                 base_timestamp = max(preceding_timestamps)
-                precedence_timestamp = base_timestamp + timedelta(days=stage.lead_time)
+                precedence_timestamp = base_timestamp #
                 calc_details["precedence_value"] = precedence_timestamp.isoformat()
-                calc_details["base_date"] = base_timestamp.isoformat()
+                calc_details["target_date"] = (base_timestamp + timedelta(days=stage.lead_time)).isoformat()
         
         # 2. Extract and get actual timestamp (evaluate as expression or field)
+        if not precedence_timestamp:
+            fallback_result, fallback_formula = self._evaluate_expression(
+                stage.fallback_calculation.expression, po_row
+            )
+            print ("Fallback", fallback_result)
+            if fallback_result:
+                final_timestamp = fallback_result + timedelta(days=stage.lead_time)
+                calc_details["source"] = stage.fallback_calculation.expression
+                calc_details["target_date"] = fallback_result.isoformat()
+                calc_details["decision_reason"] = "No precedence available, using fallback expression"
+                calc_details["final_choice"] = "fallback"
+            else:
+                calc_details["method"] = "failed"
+                calc_details["decision_reason"] = "No valid calculation method available"
+        
+        
         actual_timestamp = None
         actual_formula = None
         if stage.actual_timestamp:
@@ -357,7 +421,6 @@ class TATCalculator:
         
         # 3. Determine final timestamp and method
         final_timestamp = None
-        print("precednce and actual", precedence_timestamp,"__---___", actual_timestamp)
         if precedence_timestamp and actual_timestamp:
             if actual_timestamp >= precedence_timestamp:
                 final_timestamp = actual_timestamp
@@ -368,10 +431,9 @@ class TATCalculator:
             else:
                 final_timestamp = precedence_timestamp
                 calc_details["method"] = "precedence_over_actual"
-                calc_details["source"] = f"Stage {stage.preceding_stage[0]}'s timestamp"
+                calc_details["source"] = f"Calculated from dependencies"
                 calc_details["decision_reason"] = f"Precedence stage's timestamp ({precedence_timestamp.strftime('%Y-%m-%d')}) is later than actual ({actual_timestamp.strftime('%Y-%m-%d')})"
                 calc_details["final_choice"] = "precedence"
-                
         
         elif actual_timestamp:
             final_timestamp = actual_timestamp
@@ -382,34 +444,35 @@ class TATCalculator:
         
         elif precedence_timestamp:
             final_timestamp = precedence_timestamp + timedelta(days=stage.lead_time)
-            calc_details["method"] = "precendence stage timestamp + current stage lead time"
-            calc_details["source"] = f"Stage {stage.preceding_stage[0]} + {stage.lead_time} days"
-            calc_details["decision_reason"] = "No actual timestamp available, using precedence stage + LT calculation"
+            calc_details["method"] = "precedence_only"
+            calc_details["source"] = f"Calculated from dependencies + {stage.lead_time} days"
+            calc_details["decision_reason"] = "No actual timestamp available, using precedence calculation"
             calc_details["final_choice"] = "precedence"
-            
-
         
         # 4. Fallback calculation if no valid timestamp
-        if not final_timestamp:
-            fallback_result, fallback_formula = self._evaluate_expression(
-                stage.fallback_calculation.expression, po_row
-            )
-            if fallback_result:
-                final_timestamp = fallback_result + timedelta(days=stage.lead_time)
-                calc_details["method"] = "fallback"
-                calc_details["source"] = stage.fallback_calculation.expression
-                calc_details["base_date"] = fallback_result.isoformat()
-                calc_details["decision_reason"] = "No precedence or actual data available, using fallback expression"
-                calc_details["final_choice"] = "fallback"
-            else:
-                calc_details["method"] = "failed"
-                calc_details["decision_reason"] = "No valid calculation method available"
-        
+
         # Cache result
         result = (final_timestamp, calc_details)
         self.calculated_adjustments[stage_id] = result
         
         return result
+    
+    def _extract_actual_field(self, expression: str) -> Optional[str]:
+        """
+        Extract the 'actual' field from a max() expression
+        
+        For expressions like "max(actual_field, fallback)", returns "actual_field"
+        """
+        try:
+            tree = ast.parse(expression, mode='eval')
+            if isinstance(tree.body, ast.Call) and isinstance(tree.body.func, ast.Name):
+                if tree.body.func.id == 'max' and tree.body.args:
+                    first_arg = tree.body.args[0]
+                    if isinstance(first_arg, ast.Name):
+                        return first_arg.id
+        except:
+            pass
+        return None
     
     def calculate_tat(self, po_row: pd.Series) -> Dict[str, Any]:
         """
@@ -497,7 +560,8 @@ class TATCalculator:
             "method": method,
             "source": calc_details.get("source"),
             "decision": calc_details.get("decision_reason"),
-            "lead_time_days": calc_details.get("lead_time_applied", 0)
+            "lead_time_days": calc_details.get("lead_time_applied", 0),
+            "target_date": calc_details.get("target_date")
         }
         
         # Add method-specific details
@@ -515,7 +579,7 @@ class TATCalculator:
             })
         elif method == "precedence_only":
             summary.update({
-                "base_date": calc_details.get("base_date"),
+                "precedence_date": calc_details.get("precedence_date"),
                 "reason": "No actual timestamp available"
             })
         elif method == "actual_only":
@@ -525,7 +589,7 @@ class TATCalculator:
             })
         elif method == "fallback":
             summary.update({
-                "base_date": calc_details.get("base_date"),
+                "target_date": calc_details.get("target_date"),
                 "expression": calc_details.get("source"),
                 "reason": "Using fallback calculation"
             })

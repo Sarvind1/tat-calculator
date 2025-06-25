@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 class TATRunner:
     """Complete TAT calculation runner with enhanced reporting"""
     
-    def __init__(self, excel_file: str = "ts_small_1.xlsx", config_file: str = "stages_config.json"):
+    def __init__(self, excel_file: str = "ts_big.xlsx", config_file: str = "stages_config.json"):
         self.excel_file = excel_file
         self.config_file = config_file
         self.df = None
@@ -87,7 +87,8 @@ class TATRunner:
             if col in self.df.columns:
                 original_type = self.df[col].dtype
                 self.df[col] = pd.to_datetime(self.df[col], errors='coerce')
-                
+                self.df[col] = self.df[col].astype(object).where(pd.notna(self.df[col]), None)
+
                 missing_count = self.df[col].isna().sum()
                 total_count = len(self.df)
                 
@@ -205,7 +206,7 @@ def main():
         runner.setup()
         
         # Run calculations (start with sample for testing)
-        sample_size = None  # Process first 5 POs for testing
+        sample_size = 5  # Process first 5 POs for testing
         print(f"\nRunning calculations on sample of {sample_size} POs...")
         results = runner.run_calculations(sample_size=sample_size)
         
