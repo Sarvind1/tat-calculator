@@ -8,14 +8,15 @@
 ## 📋 Table of Contents
 1. [Project Overview](#project-overview)
 2. [Architecture & Design Principles](#architecture--design-principles)
-3. [Core Components Deep Dive](#core-components-deep-dive)
-4. [Data Flow & Processing Logic](#data-flow--processing-logic)
-5. [Configuration System](#configuration-system)
-6. [Expression Engine](#expression-engine)
-7. [Developer Quick Reference](#developer-quick-reference)
-8. [Common Patterns & Best Practices](#common-patterns--best-practices)
-9. [Troubleshooting Guide](#troubleshooting-guide)
-10. [Extension Points](#extension-points)
+3. [Modular Structure](#modular-structure)
+4. [Core Components Deep Dive](#core-components-deep-dive)
+5. [Data Flow & Processing Logic](#data-flow--processing-logic)
+6. [Configuration System](#configuration-system)
+7. [Expression Engine](#expression-engine)
+8. [Developer Quick Reference](#developer-quick-reference)
+9. [Common Patterns & Best Practices](#common-patterns--best-practices)
+10. [Troubleshooting Guide](#troubleshooting-guide)
+11. [Extension Points](#extension-points)
 
 ---
 
@@ -87,65 +88,88 @@ Excel-based TAT calculations were:
 
 ---
 
+## 📦 Modular Structure
+
+The codebase has been refactored into 4 clean modules:
+
+### 1. **models_config.py** - Data Models & Configuration
+- Pydantic models for data validation
+- Configuration loading and validation
+- Circular dependency detection
+
+### 2. **expression_evaluator.py** - Expression Engine
+- Dynamic expression evaluation
+- Custom functions (max, add_days, cond)
+- Date parsing utilities
+- AST-based safe evaluation
+
+### 3. **stage_calculator.py** - Core Stage Calculator
+- Individual stage timestamp calculation
+- Precedence vs actual logic
+- Memoization implementation
+- Dependency resolution
+
+### 4. **tat_processor.py** - TAT Processing & Export
+- Orchestrates calculations across all stages
+- Batch processing capabilities
+- Result formatting
+- Excel export functionality
+
+### 5. **tat_calculator_main.py** - Main Entry Point
+- Coordinates all modules
+- Provides backward compatibility
+- Single interface for all operations
+
+---
+
 ## 🔧 Core Components Deep Dive
 
-### 1. TATCalculator Class (`tat_calculator.py`)
+### 1. TATCalculator Class (`tat_calculator_main.py`)
 
-The heart of the system, orchestrating all calculations.
-
-#### Key Methods:
-
-**`__init__(config_path)`**
-- Loads and validates configuration
-- Initializes memoization cache
-- Performs cycle detection on dependency graph
-
-**`calculate_adjusted_timestamp(stage_id, po_row)`**
-```python
-# Core calculation logic hierarchy:
-1. Calculate precedence timestamp from dependencies
-2. Extract actual timestamp from PO data
-3. Compare and choose max(precedence, actual)
-4. If neither available, use fallback expression
-5. Apply lead_time to final result
-```
-
-**`_evaluate_expression(expression, po_row)`**
-- Parses expressions like `"max(field1, add_days(field2, 3))"`
-- Supports nested function calls
-- Handles conditional logic with `cond(condition, true_val, false_val)`
-
-**`calculate_tat(po_row)`**
-- Orchestrates calculation for all 31 stages
-- Aggregates results with business insights
-- Provides completion statistics
-
-### 2. Pydantic Models
-
-Enforce data structure and validation:
+The main coordinator that initializes and manages all sub-modules.
 
 ```python
-ProcessFlow:
-  - critical_path: bool
-  - parallel_processes: List[str]
-  - process_type: str
-  - team_owner: str
-
-StageConfig:
-  - name: str
-  - actual_timestamp: Optional[str]
-  - preceding_stage: Optional[Union[str, List[str]]]
-  - fallback_calculation: FallbackCalculation
-  - lead_time: int
+class TATCalculator:
+    def __init__(self, config_path):
+        # Load configuration
+        self.config = load_config(config_path)
+        validate_config(self.config)
+        
+        # Initialize components
+        self.expression_evaluator = ExpressionEvaluator()
+        self.stage_calculator = StageCalculator(self.config, self.expression_evaluator)
+        self.tat_processor = TATProcessor(self.config, self.stage_calculator)
 ```
 
-### 3. TATRunner Class (`run_tat_calculation.py`)
+### 2. ExpressionEvaluator (`expression_evaluator.py`)
 
-Handles the full pipeline:
-- Excel data loading and preprocessing
-- Date column conversions
-- Batch processing
-- Result export to JSON and Excel
+Handles all dynamic expression evaluation:
+
+```python
+# Supported expression types:
+- Field references: "po_created_date"
+- Functions: "max(date1, date2)", "add_days(date, 5)"
+- Conditionals: "cond(pi_applicable==1, ['5'], ['2'])"
+- Complex nested: "max(field1, add_days(field2, 3))"
+```
+
+### 3. StageCalculator (`stage_calculator.py`)
+
+Core calculation logic with three-tier priority:
+
+```python
+# Priority hierarchy:
+1. Precedence-based: Dependencies + lead time
+2. Actual timestamp: From PO data
+3. Fallback: Expression evaluation
+```
+
+### 4. TATProcessor (`tat_processor.py`)
+
+Handles batch operations and output:
+- Orchestrates calculations for all stages
+- Aggregates results with statistics
+- Exports to Excel with calculated dates
 
 ---
 
@@ -279,7 +303,7 @@ Each stage in `stages_config.json` contains:
 To add a new function (e.g., `min`):
 
 ```python
-# In _eval_node method:
+# In _eval_node method in expression_evaluator.py:
 elif func_name == 'min':
     valid_dates = [arg for arg in args if isinstance(arg, datetime)]
     return min(valid_dates) if valid_dates else None
@@ -338,7 +362,7 @@ python run_tat_calculation.py
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
-# Add debug prints in calculate_adjusted_timestamp:
+# Add debug prints in stage_calculator.py:
 print(f"Stage {stage_id}: precedence={precedence_timestamp}, actual={actual_timestamp}")
 ```
 
@@ -346,10 +370,13 @@ print(f"Stage {stage_id}: precedence={precedence_timestamp}, actual={actual_time
 
 | File | Purpose | Key Functions |
 |------|---------|---------------|
-| `tat_calculator.py` | Core calculation engine | `calculate_adjusted_timestamp()`, `_evaluate_expression()` |
+| `tat_calculator_main.py` | Main entry point | Coordinates all modules |
+| `models_config.py` | Data models & config loading | `load_config()`, `validate_config()` |
+| `expression_evaluator.py` | Expression evaluation engine | `evaluate_expression()`, `_eval_node()` |
+| `stage_calculator.py` | Core calculation logic | `calculate_adjusted_timestamp()` |
+| `tat_processor.py` | Batch processing & export | `calculate_tat()`, `export_to_excel()` |
 | `stages_config.json` | Business logic configuration | All 31 stage definitions |
-| `run_tat_calculation.py` | Runner and I/O handling | `run_calculations()`, `export_to_excel()` |
-| `requirements.txt` | Python dependencies | pandas, pydantic, numpy, openpyxl |
+| `run_tat_calculation.py` | Runner script | `run_calculations()` |
 
 ---
 
@@ -371,7 +398,7 @@ print(f"Stage {stage_id}: precedence={precedence_timestamp}, actual={actual_time
 
 ### 4. Memoization for Performance
 ```python
-# Pattern used throughout:
+# Pattern used in stage_calculator.py:
 if stage_id in self.calculated_adjustments:
     return self.calculated_adjustments[stage_id]
 # ... calculate ...
@@ -418,7 +445,7 @@ return result
 ## 🔌 Extension Points
 
 ### 1. Adding New Expression Functions
-Location: `_eval_node()` method
+Location: `expression_evaluator.py` in `_eval_node()` method
 ```python
 elif func_name == 'your_function':
     # Your implementation
@@ -426,12 +453,12 @@ elif func_name == 'your_function':
 ```
 
 ### 2. Custom Output Formats
-Location: `calculate_tat()` method
+Location: `tat_processor.py` in `calculate_tat()` method
 - Modify result dictionary structure
 - Add new analytics/metrics
 
 ### 3. Alternative Data Sources
-Location: `TATRunner` class
+Location: `run_tat_calculation.py` in `TATRunner` class
 - Replace Excel with database queries
 - Add API integration
 
@@ -455,6 +482,7 @@ Location: `TATRunner` class
 4. **Expressions are powerful**: Complex logic without code changes
 5. **Logging is your friend**: Extensive logging already in place
 6. **Test incrementally**: Use sample_size parameter to test small batches
+7. **Modular structure**: Each module has a specific responsibility
 
 ---
 
@@ -466,7 +494,8 @@ Location: `TATRunner` class
 - [ ] Modify one stage in config and see results
 - [ ] Review the generated JSON output structure
 - [ ] Check Excel export format
-- [ ] Understand the expression evaluation process
+- [ ] Understand the modular structure
+- [ ] Review each module's responsibilities
 
 ---
 
