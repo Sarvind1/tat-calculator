@@ -124,7 +124,6 @@ class StageCalculator:
                 # Cache result and return (ORIGINAL LOGIC)
                 result = (final_timestamp, calc_details)
                 self.calculated_adjustments[stage_id] = result
-                return result
             else:
                 calc_details["method"] = "failed"
                 calc_details["decision_reason"] = "No valid calculation method available"
