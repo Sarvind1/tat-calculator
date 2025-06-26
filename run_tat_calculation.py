@@ -3,7 +3,7 @@ Complete TAT Calculation Runner
 ==============================
 
 This script runs the complete TAT calculation system on your Excel data
-and generates comprehensive reports and analytics.
+and generates comprehensive reports and analytics with integrated delay information.
 """
 
 import pandas as pd
@@ -47,7 +47,7 @@ logger = logging.getLogger(__name__)
 
 
 class TATRunner:
-    """Complete TAT calculation runner with enhanced reporting and organized outputs"""
+    """Complete TAT calculation runner with enhanced reporting, organized outputs, and integrated delays"""
     
     def __init__(self, excel_file: str = "ts_big.xlsx", config_file: str = "stages_config.json"):
         self.excel_file = excel_file
@@ -154,8 +154,8 @@ class TATRunner:
             logger.error(f"Error initializing calculator: {e}")
             raise
     
-    def run_calculations(self, sample_size: int = None, calculate_delays: bool = True):
-        """Run TAT calculations on all or sample of POs"""
+    def run_calculations(self, sample_size: int = None, include_detailed_delays: bool = True):
+        """Run TAT calculations with integrated delay information"""
         if sample_size:
             df_to_process = self.df.head(sample_size)
             logger.info(f"Processing sample of {sample_size} POs")
@@ -167,17 +167,36 @@ class TATRunner:
         self.delay_results = []
         errors = []
         
+        # Check if calculator supports new integrated delay functionality
+        has_integrated_delays = hasattr(self.calculator, 'process_batch_with_delays')
+        
+        if has_integrated_delays and include_detailed_delays:
+            logger.info("Using integrated delay calculation...")
+            try:
+                # New method: get both TAT results with delays and detailed delay analysis
+                self.results, self.delay_results = self.calculator.process_batch_with_delays(df_to_process)
+                logger.info(f"Completed calculations with integrated delays: {len(self.results)} TAT results, {len(self.delay_results)} delay analyses")
+                return self.results
+            except Exception as e:
+                logger.warning(f"Error with integrated delay calculation, falling back to individual processing: {e}")
+                has_integrated_delays = False
+        
+        # Fallback to individual processing
         for index, row in df_to_process.iterrows():
             try:
                 po_id = row.get('po_razin_id', f'Row_{index}')
                 logger.info(f"Processing PO {index + 1}/{len(df_to_process)}: {po_id}")
                 
-                # Calculate TAT
-                result = self.calculator.calculate_tat(row)
+                # Calculate TAT with integrated delays
+                if hasattr(self.calculator.calculate_tat, '__code__') and 'include_delays' in self.calculator.calculate_tat.__code__.co_varnames:
+                    result = self.calculator.calculate_tat(row, include_delays=True)
+                else:
+                    result = self.calculator.calculate_tat(row)
+                
                 self.results.append(result)
                 
-                # Calculate delays if requested and method exists
-                if calculate_delays and hasattr(self.calculator, 'calculate_delay'):
+                # Calculate detailed delays if requested and method exists
+                if include_detailed_delays and hasattr(self.calculator, 'calculate_delay'):
                     delay_result = self.calculator.calculate_delay(result, row)
                     self.delay_results.append(delay_result)
                 
@@ -207,8 +226,8 @@ class TATRunner:
             json.dump(errors, f, indent=2)
         logger.info(f"Error details saved to: {error_file}")
     
-    def save_results(self, filename_prefix: str = "tat_results"):
-        """Save calculation results to organized tat_results folder"""
+    def save_results(self, filename_prefix: str = "tat_results_with_delays"):
+        """Save TAT calculation results with integrated delay information"""
         if not self.results:
             logger.warning("No results to save")
             return
@@ -219,13 +238,13 @@ class TATRunner:
         with open(filename, 'w') as f:
             json.dump(self.results, f, indent=2, default=str)
         
-        logger.info(f"TAT results saved to: {filename}")
+        logger.info(f"TAT results with delays saved to: {filename}")
         return filename
     
-    def save_delay_results(self, filename_prefix: str = "delay_results"):
-        """Save delay analysis results to organized delay_results folder"""
+    def save_delay_results(self, filename_prefix: str = "detailed_delay_analysis"):
+        """Save detailed delay analysis results"""
         if not self.delay_results:
-            logger.warning("No delay results to save")
+            logger.warning("No detailed delay results to save")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -234,11 +253,11 @@ class TATRunner:
         with open(filename, 'w') as f:
             json.dump(self.delay_results, f, indent=2, default=str)
         
-        logger.info(f"Delay results saved to: {filename}")
+        logger.info(f"Detailed delay results saved to: {filename}")
         return filename
     
-    def export_to_excel(self, filename_prefix: str = "tat_export"):
-        """Export original data + calculated timestamps to organized excel_exports folder"""
+    def export_to_excel(self, filename_prefix: str = "tat_export_with_delays"):
+        """Export original data + calculated timestamps + delay info to Excel"""
         if not self.results:
             logger.warning("No results to export")
             return
@@ -250,14 +269,14 @@ class TATRunner:
         self.calculator.export_to_excel(self.df, self.results, filename)
         return filename
     
-    def export_delay_report(self, filename_prefix: str = "delay_report"):
-        """Export delay analysis report to organized excel_exports folder"""
+    def export_delay_report(self, filename_prefix: str = "detailed_delay_report"):
+        """Export detailed delay analysis report to Excel"""
         if not self.delay_results:
-            logger.warning("No delay results to export")
+            logger.warning("No detailed delay results to export")
             return
         
         if not hasattr(self.calculator, 'export_delay_report'):
-            logger.warning("Delay report export not available in current calculator version")
+            logger.warning("Detailed delay report export not available in current calculator version")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -279,12 +298,64 @@ class TATRunner:
         self.df.to_csv(filename, index=False)
         logger.info(f"Processed CSV saved to: {filename}")
         return filename
+    
+    def print_delay_summary(self):
+        """Print a summary of delay information from TAT results"""
+        if not self.results:
+            print("No results available for delay summary")
+            return
+        
+        print("\n📊 Delay Summary from TAT Results:")
+        print("=" * 50)
+        
+        total_delayed = 0
+        total_early = 0
+        total_on_time = 0
+        total_pending_overdue = 0
+        max_delay = 0
+        worst_po = None
+        
+        for result in self.results:
+            if 'stages' not in result:
+                continue
+                
+            po_delayed = 0
+            for stage_id, stage_data in result['stages'].items():
+                delay_status = stage_data.get('delay_status')
+                delay_days = stage_data.get('delay_days', 0)
+                
+                if delay_status == 'delayed':
+                    total_delayed += 1
+                    po_delayed += delay_days or 0
+                elif delay_status == 'early':
+                    total_early += 1
+                elif delay_status == 'on_time':
+                    total_on_time += 1
+                elif delay_status == 'pending_overdue':
+                    total_pending_overdue += 1
+                
+                if delay_days and delay_days > max_delay:
+                    max_delay = delay_days
+                    worst_po = f"{result['po_id']} - Stage {stage_data['name']}"
+            
+            # Check delay summary if available
+            delay_summary = result.get('summary', {}).get('delay_summary')
+            if delay_summary:
+                print(f"PO {result['po_id']}: {delay_summary.get('delayed_stages', 0)} delayed stages, "
+                      f"{delay_summary.get('total_delay_days', 0)} total delay days")
+        
+        print(f"\n🎯 Overall Statistics:")
+        print(f"   Delayed stages: {total_delayed}")
+        print(f"   Early stages: {total_early}")
+        print(f"   On-time stages: {total_on_time}")
+        print(f"   Overdue stages: {total_pending_overdue}")
+        print(f"   Worst delay: {max_delay} days ({worst_po})")
 
 
 def main():
     """Main execution function"""
-    print("TAT Calculation System with Organized Outputs - Starting...")
-    print("="*60)
+    print("TAT Calculation System with Integrated Delay Information - Starting...")
+    print("=" * 70)
     
     try:
         # Initialize runner
@@ -296,9 +367,12 @@ def main():
         # Run calculations (start with sample for testing)
         sample_size = 5  # Process first 5 POs for testing
         print(f"\nRunning calculations on sample of {sample_size} POs...")
-        results = runner.run_calculations(sample_size=sample_size, calculate_delays=True)
+        results = runner.run_calculations(sample_size=sample_size, include_detailed_delays=True)
         
         if results:
+            # Print delay summary
+            runner.print_delay_summary()
+            
             # Save results to organized folders
             results_file = runner.save_results()
             delay_results_file = runner.save_delay_results()
@@ -312,20 +386,39 @@ def main():
             print(f"├── outputs/")
             print(f"    ├── tat_results/")
             print(f"    │   └── {os.path.basename(results_file) if results_file else 'No TAT results'}")
+            print(f"    │       (includes delay_days & delay_status for each stage)")
             print(f"    ├── delay_results/")
-            print(f"    │   └── {os.path.basename(delay_results_file) if delay_results_file else 'No delay results'}")
+            print(f"    │   └── {os.path.basename(delay_results_file) if delay_results_file else 'No detailed delay results'}")
+            print(f"    │       (detailed delay analysis with insights)")
             print(f"    ├── excel_exports/")
             print(f"    │   ├── {os.path.basename(excel_file) if excel_file else 'No Excel export'}")
+            print(f"    │   │   (includes delay columns: Stage_Delay_Days, Stage_Status)")
             print(f"    │   └── {os.path.basename(delay_report_file) if delay_report_file else 'No delay report'}")
             print(f"    ├── csv_files/")
             print(f"    │   └── {os.path.basename(processed_csv_file) if processed_csv_file else 'No CSV file'}")
             print(f"    └── logs/")
             print(f"        └── tat_calculation.log")
             
-            print(f"\n✅ All files organized in respective folders!")
+            print(f"\n✅ Key Enhancement: TAT results now include delay information!")
+            print(f"   Each stage has: delay_days, delay_status, delay_reason")
+            print(f"   Summary includes: delay counts, total delay days, critical path delays")
+            
+            # Show example of integrated delay info
+            if results and 'stages' in results[0]:
+                example_stage = list(results[0]['stages'].values())[0]
+                if 'delay_days' in example_stage:
+                    print(f"\n💡 Example stage result:")
+                    print(f"   {{")
+                    print(f"     \"name\": \"{example_stage['name']}\",")
+                    print(f"     \"timestamp\": \"{example_stage['timestamp']}\",")
+                    print(f"     \"delay_days\": {example_stage['delay_days']},")
+                    print(f"     \"delay_status\": \"{example_stage['delay_status']}\",")
+                    print(f"     \"delay_reason\": \"{example_stage.get('delay_reason', 'N/A')}\",")
+                    print(f"     ...")
+                    print(f"   }}")
             
         print(f"\n💡 To process all POs, change sample_size=None in the run_calculations() call")
-        print("🎯 TAT Calculation completed successfully!")
+        print("🎯 TAT Calculation with integrated delays completed successfully!")
         
     except Exception as e:
         logger.error(f"Error in main execution: {e}")
