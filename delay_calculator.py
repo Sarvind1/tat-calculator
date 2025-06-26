@@ -30,7 +30,7 @@ class DelayCalculator:
         
         Args:
             stage_id: Stage identifier
-            stage_result: Calculated stage result with timestamp
+            stage_result: Calculated stage result with timestamp and calculation details
             po_row: Original PO data row
             
         Returns:
@@ -47,10 +47,9 @@ class DelayCalculator:
             "team_responsible": None
         }
         
-        # Get target timestamp from calculation
-        target_timestamp = stage_result.get("timestamp")
+        # Get target timestamp from stage calculation details (NEW LOGIC)
+        target_timestamp = self._extract_target_timestamp(stage_result)
         if target_timestamp:
-            target_timestamp = pd.to_datetime(target_timestamp)
             delay_info["target_timestamp"] = target_timestamp.isoformat()
         
         # Get actual timestamp from PO data
@@ -92,6 +91,40 @@ class DelayCalculator:
                 delay_info["delay_reason"] = "Stage not yet completed"
         
         return delay_info
+    
+    def _extract_target_timestamp(self, stage_result: Dict[str, Any]) -> Optional[datetime]:
+        """
+        Extract target timestamp from stage calculation details.
+        
+        NEW LOGIC: Uses target_date from calculation details instead of timestamp.
+        The target_date represents the expected completion time for delay analysis.
+        
+        Args:
+            stage_result: Stage calculation result
+            
+        Returns:
+            Target timestamp as datetime object
+        """
+        # Try to get target_date from calculation details (NEW APPROACH)
+        calculation = stage_result.get("calculation", {})
+        if isinstance(calculation, dict):
+            target_date = calculation.get("target_date")
+            if target_date:
+                try:
+                    return pd.to_datetime(target_date)
+                except Exception as e:
+                    logger.warning(f"Failed to parse target_date '{target_date}': {e}")
+        
+        # Fallback to timestamp for backward compatibility (LEGACY SUPPORT)
+        timestamp = stage_result.get("timestamp")
+        if timestamp:
+            try:
+                return pd.to_datetime(timestamp)
+            except Exception as e:
+                logger.warning(f"Failed to parse timestamp '{timestamp}': {e}")
+        
+        logger.warning(f"No valid target timestamp found in stage result: {stage_result.get('name', 'Unknown')}")
+        return None
     
     def _get_actual_timestamp(self, field_name: str, po_row: pd.Series) -> Optional[datetime]:
         """Extract actual timestamp from PO data"""
