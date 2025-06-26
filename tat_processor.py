@@ -329,7 +329,7 @@ class TATProcessor:
 
     def export_to_excel(self, df: pd.DataFrame, results: List[Dict[str, Any]], output_file: str):
         """
-        Export original data + calculated timestamps to Excel
+        Export original data + calculated timestamps + delay info to Excel
         
         Args:
             df: Original DataFrame
@@ -378,6 +378,92 @@ class TATProcessor:
         # Save to Excel
         export_df.to_excel(output_file, index=False)
         logger.info(f"Results exported to: {output_file}")
+    
+    def export_stage_level_excel(self, df: pd.DataFrame, results: List[Dict[str, Any]], output_file: str):
+        """
+        Export stage-level data to Excel with 3 separate tabs:
+        - actual_timestamps: Actual timestamps from PO data
+        - timestamps: Calculated timestamps from TAT processing
+        - delay_days: Delay days for each stage
+        
+        Args:
+            df: Original DataFrame
+            results: TAT calculation results
+            output_file: Output Excel file path
+        """
+        # Ensure the directory exists
+        output_path = Path(output_file)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Get all stage configurations
+        stage_configs = {stage_id: config for stage_id, config in self.config.stages.items()}
+        
+        # Prepare data for each tab
+        po_ids = []
+        actual_timestamps_data = {}
+        calculated_timestamps_data = {}
+        delay_days_data = {}
+        
+        # Initialize stage columns
+        for stage_id, stage_config in stage_configs.items():
+            stage_name = stage_config.name
+            actual_timestamps_data[stage_name] = []
+            calculated_timestamps_data[stage_name] = []
+            delay_days_data[stage_name] = []
+        
+        # Process each result
+        for result in results:
+            if 'stages' not in result:
+                continue
+                
+            po_id = result['po_id']
+            po_ids.append(po_id)
+            
+            # Get original PO row
+            po_row = df[df['po_razin_id'] == po_id]
+            if len(po_row) == 0:
+                po_row = pd.Series()
+            else:
+                po_row = po_row.iloc[0]
+            
+            # Process each stage
+            for stage_id, stage_config in stage_configs.items():
+                stage_name = stage_config.name
+                stage_result = result['stages'].get(stage_id, {})
+                
+                # 1. Actual timestamps (from PO data)
+                actual_timestamp = None
+                if stage_config.actual_timestamp and len(po_row) > 0:
+                    actual_value = self._get_actual_timestamp(stage_config.actual_timestamp, po_row)
+                    if actual_value:
+                        actual_timestamp = actual_value.date()
+                actual_timestamps_data[stage_name].append(actual_timestamp)
+                
+                # 2. Calculated timestamps (from TAT processing)
+                calculated_timestamp = None
+                if stage_result.get('timestamp'):
+                    calculated_timestamp = pd.to_datetime(stage_result['timestamp']).date()
+                calculated_timestamps_data[stage_name].append(calculated_timestamp)
+                
+                # 3. Delay days
+                delay_days = stage_result.get('delay_days')
+                delay_days_data[stage_name].append(delay_days)
+        
+        # Create DataFrames for each tab
+        actual_df = pd.DataFrame({'PO_ID': po_ids, **actual_timestamps_data})
+        calculated_df = pd.DataFrame({'PO_ID': po_ids, **calculated_timestamps_data})
+        delay_df = pd.DataFrame({'PO_ID': po_ids, **delay_days_data})
+        
+        # Write to Excel with multiple tabs
+        with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+            actual_df.to_excel(writer, sheet_name='actual_timestamps', index=False)
+            calculated_df.to_excel(writer, sheet_name='timestamps', index=False)
+            delay_df.to_excel(writer, sheet_name='delay_days', index=False)
+        
+        logger.info(f"Stage-level results exported to: {output_file}")
+        logger.info(f"  - actual_timestamps tab: {len(po_ids)} POs x {len(stage_configs)} stages")
+        logger.info(f"  - timestamps tab: {len(po_ids)} POs x {len(stage_configs)} stages")  
+        logger.info(f"  - delay_days tab: {len(po_ids)} POs x {len(stage_configs)} stages")
     
     def save_to_csv(self, df: pd.DataFrame, filename_prefix: str = "processed_data") -> str:
         """
