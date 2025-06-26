@@ -13,13 +13,33 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import sys
 import traceback
+import os
 
-# Set up comprehensive logging
+# Set up organized folder structure
+def setup_output_folders():
+    """Create organized output folder structure"""
+    folders = [
+        'outputs/tat_results',
+        'outputs/delay_results', 
+        'outputs/excel_exports',
+        'outputs/csv_files',
+        'outputs/logs'
+    ]
+    
+    for folder in folders:
+        Path(folder).mkdir(parents=True, exist_ok=True)
+    
+    return folders
+
+# Create folders before setting up logging
+setup_output_folders()
+
+# Set up comprehensive logging with organized paths
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('tat_calculation.log'),
+        logging.FileHandler('outputs/logs/tat_calculation.log'),
         logging.StreamHandler(sys.stdout)
     ]
 )
@@ -27,7 +47,7 @@ logger = logging.getLogger(__name__)
 
 
 class TATRunner:
-    """Complete TAT calculation runner with enhanced reporting"""
+    """Complete TAT calculation runner with enhanced reporting and organized outputs"""
     
     def __init__(self, excel_file: str = "ts_big.xlsx", config_file: str = "stages_config.json"):
         self.excel_file = excel_file
@@ -36,6 +56,10 @@ class TATRunner:
         self.calculator = None
         self.results = []
         self.delay_results = []
+        
+        # Ensure output folders exist
+        self.output_folders = setup_output_folders()
+        logger.info(f"Output folders created: {self.output_folders}")
         
     def setup(self):
         """Set up the calculator and load data"""
@@ -175,35 +199,37 @@ class TATRunner:
         return self.results
     
     def save_errors(self, errors):
-        """Save error details to file"""
-        error_file = f"tat_errors_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+        """Save error details to organized logs folder"""
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        error_file = f"outputs/logs/tat_errors_{timestamp}.json"
+        
         with open(error_file, 'w') as f:
             json.dump(errors, f, indent=2)
         logger.info(f"Error details saved to: {error_file}")
     
     def save_results(self, filename_prefix: str = "tat_results"):
-        """Save calculation results to JSON file"""
+        """Save calculation results to organized tat_results folder"""
         if not self.results:
             logger.warning("No results to save")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"{filename_prefix}_{timestamp}.json"
+        filename = f"outputs/tat_results/{filename_prefix}_{timestamp}.json"
         
         with open(filename, 'w') as f:
             json.dump(self.results, f, indent=2, default=str)
         
-        logger.info(f"Results saved to: {filename}")
+        logger.info(f"TAT results saved to: {filename}")
         return filename
     
     def save_delay_results(self, filename_prefix: str = "delay_results"):
-        """Save delay analysis results to JSON file"""
+        """Save delay analysis results to organized delay_results folder"""
         if not self.delay_results:
             logger.warning("No delay results to save")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"{filename_prefix}_{timestamp}.json"
+        filename = f"outputs/delay_results/{filename_prefix}_{timestamp}.json"
         
         with open(filename, 'w') as f:
             json.dump(self.delay_results, f, indent=2, default=str)
@@ -212,19 +238,20 @@ class TATRunner:
         return filename
     
     def export_to_excel(self, filename_prefix: str = "tat_export"):
-        """Export original data + calculated timestamps to Excel"""
+        """Export original data + calculated timestamps to organized excel_exports folder"""
         if not self.results:
             logger.warning("No results to export")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"{filename_prefix}_{timestamp}.xlsx"
+        filename = f"outputs/excel_exports/{filename_prefix}_{timestamp}.xlsx"
         
+        # Use the organized path in the export method
         self.calculator.export_to_excel(self.df, self.results, filename)
         return filename
     
     def export_delay_report(self, filename_prefix: str = "delay_report"):
-        """Export delay analysis report to Excel"""
+        """Export delay analysis report to organized excel_exports folder"""
         if not self.delay_results:
             logger.warning("No delay results to export")
             return
@@ -234,15 +261,29 @@ class TATRunner:
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        filename = f"{filename_prefix}_{timestamp}.xlsx"
+        filename = f"outputs/excel_exports/{filename_prefix}_{timestamp}.xlsx"
         
+        # Use the organized path in the export method
         self.calculator.export_delay_report(self.delay_results, filename)
+        return filename
+    
+    def save_processed_csv(self, filename_prefix: str = "processed_data"):
+        """Save processed CSV data to organized csv_files folder"""
+        if self.df is None:
+            logger.warning("No data to save as CSV")
+            return
+        
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"outputs/csv_files/{filename_prefix}_{timestamp}.csv"
+        
+        self.df.to_csv(filename, index=False)
+        logger.info(f"Processed CSV saved to: {filename}")
         return filename
 
 
 def main():
     """Main execution function"""
-    print("TAT Calculation System with Delay Analysis - Starting...")
+    print("TAT Calculation System with Organized Outputs - Starting...")
     print("="*60)
     
     try:
@@ -258,28 +299,38 @@ def main():
         results = runner.run_calculations(sample_size=sample_size, calculate_delays=True)
         
         if results:
-            # Save results
+            # Save results to organized folders
             results_file = runner.save_results()
             delay_results_file = runner.save_delay_results()
+            processed_csv_file = runner.save_processed_csv()
             
-            # Export to Excel
+            # Export to Excel in organized folders
             excel_file = runner.export_to_excel()
             delay_report_file = runner.export_delay_report()
             
-            print(f"\nFiles Generated:")
-            print(f"- TAT Results: {results_file}")
-            print(f"- Delay Analysis: {delay_results_file}")
-            print(f"- Excel Export: {excel_file}")
-            print(f"- Delay Report: {delay_report_file}")
-            print(f"- Logs: tat_calculation.log")
+            print(f"\n📁 Organized Output Structure:")
+            print(f"├── outputs/")
+            print(f"    ├── tat_results/")
+            print(f"    │   └── {os.path.basename(results_file) if results_file else 'No TAT results'}")
+            print(f"    ├── delay_results/")
+            print(f"    │   └── {os.path.basename(delay_results_file) if delay_results_file else 'No delay results'}")
+            print(f"    ├── excel_exports/")
+            print(f"    │   ├── {os.path.basename(excel_file) if excel_file else 'No Excel export'}")
+            print(f"    │   └── {os.path.basename(delay_report_file) if delay_report_file else 'No delay report'}")
+            print(f"    ├── csv_files/")
+            print(f"    │   └── {os.path.basename(processed_csv_file) if processed_csv_file else 'No CSV file'}")
+            print(f"    └── logs/")
+            print(f"        └── tat_calculation.log")
             
-        print(f"\nTo process all POs, change sample_size=None in the run_calculations() call")
-        print("TAT Calculation completed successfully!")
+            print(f"\n✅ All files organized in respective folders!")
+            
+        print(f"\n💡 To process all POs, change sample_size=None in the run_calculations() call")
+        print("🎯 TAT Calculation completed successfully!")
         
     except Exception as e:
         logger.error(f"Error in main execution: {e}")
-        print(f"Error: {e}")
-        print("See tat_calculation.log for detailed error information")
+        print(f"❌ Error: {e}")
+        print("📋 See outputs/logs/tat_calculation.log for detailed error information")
 
 
 if __name__ == "__main__":
