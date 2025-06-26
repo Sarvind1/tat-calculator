@@ -22,6 +22,76 @@ This document tracks significant changes and provides guidance for commit messag
 
 ## Recent Changes Log
 
+### 2025-06-26: Implement organized folder structure for clean file outputs
+**Type**: Feature  
+**Files Modified**: `run_tat_calculation.py`, `tat_processor.py`, `delay_calculator.py`  
+**Commit SHA**: cdfd4e5845b4c6f5abb82d89ebd62f13971f5fc0
+
+**Issue**: All output files (TAT results, delay reports, Excel exports, CSVs, logs) were being saved to the root directory, creating a cluttered and disorganized file structure.
+
+**Solution**: 
+- Implemented organized folder structure with segregated directories:
+  - `outputs/tat_results/` - TAT calculation JSON results
+  - `outputs/delay_results/` - Delay analysis JSON results  
+  - `outputs/excel_exports/` - Excel files (TAT exports, delay reports)
+  - `outputs/csv_files/` - Processed CSV data files
+  - `outputs/logs/` - Log files and error reports
+- Added automatic folder creation utilities
+- Updated all save/export methods to use organized paths
+- Enhanced visual output display showing folder structure
+- Maintained backward compatibility for existing code
+
+**Impact**: 
+- Clean, organized project structure
+- Easy file navigation and management
+- Better separation of different output types
+- Professional project organization
+- Scalable structure for future additions
+
+**Code Changes**:
+
+#### `run_tat_calculation.py`:
+```python
+# Before: Files saved to root directory
+filename = f"{filename_prefix}_{timestamp}.json"
+
+# After: Files saved to organized folders
+filename = f"outputs/tat_results/{filename_prefix}_{timestamp}.json"
+```
+
+#### `tat_processor.py`:
+```python
+# Added folder creation utilities
+def _ensure_output_folders(self):
+    folders = ['outputs/tat_results', 'outputs/delay_results', ...]
+    for folder in folders:
+        Path(folder).mkdir(parents=True, exist_ok=True)
+```
+
+#### `delay_calculator.py`:
+```python
+# Added organized CSV export method
+def save_delay_analysis_csv(self, delay_results, filename_prefix="delay_analysis"):
+    filename = f"outputs/csv_files/{filename_prefix}_{timestamp}.csv"
+```
+
+**Enhanced Output Display**:
+```
+📁 Organized Output Structure:
+├── outputs/
+    ├── tat_results/
+    │   └── tat_results_20250626_100352.json
+    ├── delay_results/
+    │   └── delay_results_20250626_100352.json
+    ├── excel_exports/
+    │   ├── tat_export_20250626_100352.xlsx
+    │   └── delay_report_20250626_100352.xlsx
+    ├── csv_files/
+    │   └── processed_data_20250626_100352.csv
+    └── logs/
+        └── tat_calculation.log
+```
+
 ### 2025-06-26: Fix delay calculation to use target_date from stage_calculations
 **Type**: Fix  
 **Files Modified**: `delay_calculator.py`  
@@ -58,13 +128,15 @@ target_timestamp = self._extract_target_timestamp(stage_result)
 1. Review the project_brain.md for architecture understanding
 2. Check existing code patterns and naming conventions
 3. Ensure changes align with modular structure principles
+4. Consider impact on file organization and outputs
 
 ### Change Process
 1. Make targeted, specific changes
 2. Test changes on sample data
 3. Update relevant documentation
-4. Commit with descriptive message following the format above
-5. Update this commits_guide.md with change details
+4. Ensure organized folder structure is maintained
+5. Commit with descriptive message following the format above
+6. Update this commits_guide.md with change details
 
 ### Configuration Changes
 - Most business logic changes should be in `stages_config.json`
@@ -76,6 +148,14 @@ target_timestamp = self._extract_target_timestamp(stage_result)
 - Verify calculations match expected results
 - Check JSON output structure remains consistent
 - Ensure Excel export functionality works
+- Verify organized folder structure is created and used correctly
+
+### Output Organization Best Practices
+- Always use organized folder structure for new outputs
+- Maintain consistent naming conventions with timestamps
+- Ensure folder creation before file operations
+- Provide clear feedback on where files are saved
+- Keep file types properly segregated
 
 ## Future Improvements Tracking
 
@@ -84,9 +164,31 @@ target_timestamp = self._extract_target_timestamp(stage_result)
 - [ ] Performance optimization for large datasets
 - [ ] Additional custom functions in expression evaluator
 - [ ] Automated testing framework
+- [ ] Archive functionality for old outputs
+- [ ] Configuration-driven output folder customization
 
 ### Known Issues
 - None currently identified
+
+## Folder Structure Guidelines
+
+### Standard Output Folders
+```
+outputs/
+├── tat_results/        # TAT calculation JSON results
+├── delay_results/      # Delay analysis JSON results
+├── excel_exports/      # Excel files (exports, reports)
+├── csv_files/          # Processed CSV data
+└── logs/              # Application logs and errors
+```
+
+### File Naming Conventions
+- **Format**: `{prefix}_{YYYYMMDD_HHMMSS}.{ext}`
+- **TAT Results**: `tat_results_20250626_100352.json`
+- **Delay Results**: `delay_results_20250626_100352.json`
+- **Excel Exports**: `tat_export_20250626_100352.xlsx`
+- **CSV Files**: `processed_data_20250626_100352.csv`
+- **Logs**: `tat_calculation.log` (single log file with rotation)
 
 ---
 
@@ -305,6 +407,7 @@ When making changes:
 3. **Better Maintainability**: Changes are localized to relevant modules
 4. **Improved Readability**: Smaller, focused files are easier to understand
 5. **Reusability**: Components can be used independently
+6. **Organized Outputs**: Clean folder structure for all generated files
 
 ## Backward Compatibility
 
@@ -316,6 +419,7 @@ The old `tat_calculator.py` file remains in the repository for backward compatib
 - No changes to `stages_config.json` format
 - Excel input/output formats unchanged
 - JSON output structure unchanged
+- **New**: Organized folder structure for outputs
 
 ## Future Deprecation
 
