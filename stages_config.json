@@ -26,7 +26,7 @@
         "team_owner": "Procurement"
       },
       "fallback_calculation": {
-        "expression": "max(po_approval_date, add_days(po_created_date, 2))"
+        "expression": ""
       },
       "lead_time": 3
     },
@@ -41,7 +41,7 @@
         "team_owner": "Procurement"
       },
       "fallback_calculation": {
-        "expression": "max(supplier_confirmation_date, add_days(po_approval_date, 3))"
+        "expression": ""
       },
       "lead_time": 1
     },
@@ -146,7 +146,7 @@
         "team_owner": "Procurement"
       },
       "fallback_calculation": {
-        "expression": "max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt),stage_8+plt-21)"
+        "expression": "max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)"
       },
       "lead_time": 1
     },
@@ -258,7 +258,7 @@
     "18": { 
       "name": "18. FFW Booking Missing",
       "actual_timestamp": "ffw_booking_ts",
-      "preceding_stage": "cond(ci_applicable==1, ['16','17'], ['17'])",
+      "preceding_stage": "cond(ci_applicable==1, ['14','16','17'], ['17'])",
       "process_flow": {
         "critical_path": true,
         "parallel_processes": [],
