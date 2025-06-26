@@ -3,6 +3,7 @@ Stage Calculator Module
 =======================
 
 Core calculation logic for individual stages with memoization.
+This module maintains the exact calculation logic from the original tat_calculator.py
 """
 
 import ast
@@ -18,11 +19,13 @@ logger = logging.getLogger(__name__)
 
 class StageCalculator:
     """
-    Calculates adjusted timestamps for individual stages using priority logic:
+    Calculates adjusted timestamps for individual stages using the ORIGINAL priority logic:
     
     1. Precedence-based calculation (from dependencies + lead time)
     2. Actual timestamp comparison (if available)
-    3. Fallback calculation (last resort)
+    3. Fallback calculation (when no precedence available)
+    
+    This maintains the exact logic from the original tat_calculator.py
     """
     
     def __init__(self, config: StagesConfig, expression_evaluator: ExpressionEvaluator):
@@ -34,7 +37,11 @@ class StageCalculator:
     
     def calculate_adjusted_timestamp(self, stage_id: str, po_row: pd.Series) -> Tuple[Optional[datetime], Dict[str, Any]]:
         """
-        Calculate adjusted timestamp for a specific stage using priority logic
+        Calculate adjusted timestamp for a specific stage using the ORIGINAL priority logic:
+        
+        1. Precedence-based calculation (from dependencies + lead time)
+        2. Actual timestamp comparison (if available)
+        3. Fallback calculation (when no precedence available)
         
         Args:
             stage_id: ID of the stage to calculate
@@ -67,7 +74,7 @@ class StageCalculator:
             "final_choice": None
         }
         
-        # 1. Calculate precedence-based timestamp
+        # 1. Calculate precedence-based timestamp (ORIGINAL LOGIC)
         precedence_timestamp = None
         if stage.preceding_stage:
             dependencies = []
@@ -96,11 +103,37 @@ class StageCalculator:
             calc_details["dependencies"] = dependencies
             if preceding_timestamps:
                 base_timestamp = max(preceding_timestamps)
-                precedence_timestamp = base_timestamp
+                precedence_timestamp = base_timestamp  # WITHOUT lead time here (original logic)
                 calc_details["precedence_value"] = precedence_timestamp.isoformat()
                 calc_details["target_date"] = (base_timestamp + timedelta(days=stage.lead_time)).isoformat()
         
-        # 2. Extract and get actual timestamp
+        # 2. ORIGINAL LOGIC: If no precedence, use fallback IMMEDIATELY
+        if not precedence_timestamp:
+            fallback_result, fallback_formula = self.expression_evaluator.evaluate_expression(
+                stage.fallback_calculation.expression, po_row
+            )
+            print("Fallback", fallback_result)
+            if fallback_result:
+                final_timestamp = fallback_result + timedelta(days=stage.lead_time)
+                calc_details["method"] = "fallback"
+                calc_details["source"] = stage.fallback_calculation.expression
+                calc_details["target_date"] = fallback_result.isoformat()
+                calc_details["decision_reason"] = "No precedence available, using fallback expression"
+                calc_details["final_choice"] = "fallback"
+                
+                # Cache result and return (ORIGINAL LOGIC)
+                result = (final_timestamp, calc_details)
+                self.calculated_adjustments[stage_id] = result
+                return result
+            else:
+                calc_details["method"] = "failed"
+                calc_details["decision_reason"] = "No valid calculation method available"
+                # Cache and return failure
+                result = (None, calc_details)
+                self.calculated_adjustments[stage_id] = result
+                return result
+        
+        # 3. Extract and get actual timestamp (ORIGINAL LOGIC)
         actual_timestamp = None
         actual_formula = None
         if stage.actual_timestamp:
@@ -111,7 +144,7 @@ class StageCalculator:
             if actual_timestamp:
                 calc_details["actual_value"] = actual_timestamp.isoformat()
         
-        # 3. Determine final timestamp and method
+        # 4. Determine final timestamp and method (ORIGINAL LOGIC)
         final_timestamp = None
         if precedence_timestamp and actual_timestamp:
             if actual_timestamp >= precedence_timestamp:
@@ -121,7 +154,7 @@ class StageCalculator:
                 calc_details["decision_reason"] = f"Actual date ({actual_timestamp.strftime('%Y-%m-%d')}) is later than precedence date ({precedence_timestamp.strftime('%Y-%m-%d')})"
                 calc_details["final_choice"] = "actual"
             else:
-                final_timestamp = precedence_timestamp
+                final_timestamp = precedence_timestamp + timedelta(days=stage.lead_time)  # Apply lead time here (ORIGINAL)
                 calc_details["method"] = "precedence_over_actual"
                 calc_details["source"] = f"Calculated from dependencies"
                 calc_details["decision_reason"] = f"Precedence stage's timestamp ({precedence_timestamp.strftime('%Y-%m-%d')}) is later than actual ({actual_timestamp.strftime('%Y-%m-%d')})"
@@ -140,23 +173,6 @@ class StageCalculator:
             calc_details["source"] = f"Calculated from dependencies + {stage.lead_time} days"
             calc_details["decision_reason"] = "No actual timestamp available, using precedence calculation"
             calc_details["final_choice"] = "precedence"
-        
-        # 4. Fallback calculation if no valid timestamp
-        if not final_timestamp:
-            fallback_result, fallback_formula = self.expression_evaluator.evaluate_expression(
-                stage.fallback_calculation.expression, po_row
-            )
-            print("Fallback", fallback_result)
-            if fallback_result:
-                final_timestamp = fallback_result + timedelta(days=stage.lead_time)
-                calc_details["method"] = "fallback"
-                calc_details["source"] = stage.fallback_calculation.expression
-                calc_details["target_date"] = fallback_result.isoformat()
-                calc_details["decision_reason"] = "No precedence available, using fallback expression"
-                calc_details["final_choice"] = "fallback"
-            else:
-                calc_details["method"] = "failed"
-                calc_details["decision_reason"] = "No valid calculation method available"
         
         # Cache result
         result = (final_timestamp, calc_details)
