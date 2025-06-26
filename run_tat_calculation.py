@@ -269,6 +269,24 @@ class TATRunner:
         self.calculator.export_to_excel(self.df, self.results, filename)
         return filename
     
+    def export_stage_level_excel(self, filename_prefix: str = "stage_level_analysis"):
+        """Export stage-level data to Excel with 3 tabs: actual_timestamps, timestamps, delay_days"""
+        if not self.results:
+            logger.warning("No results to export")
+            return
+        
+        # Check if calculator supports stage-level export
+        if not hasattr(self.calculator, 'export_stage_level_excel'):
+            logger.warning("Stage-level Excel export not available in current calculator version")
+            return
+        
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"outputs/excel_exports/{filename_prefix}_{timestamp}.xlsx"
+        
+        # Use the new stage-level export method
+        self.calculator.export_stage_level_excel(self.df, self.results, filename)
+        return filename
+    
     def export_delay_report(self, filename_prefix: str = "detailed_delay_report"):
         """Export detailed delay analysis report to Excel"""
         if not self.delay_results:
@@ -354,7 +372,7 @@ class TATRunner:
 
 def main():
     """Main execution function"""
-    print("TAT Calculation System with Integrated Delay Information - Starting...")
+    print("TAT Calculation System with Stage-Level Analysis - Starting...")
     print("=" * 70)
     
     try:
@@ -380,6 +398,7 @@ def main():
             
             # Export to Excel in organized folders
             excel_file = runner.export_to_excel()
+            stage_level_file = runner.export_stage_level_excel()
             delay_report_file = runner.export_delay_report()
             
             print(f"\n📁 Organized Output Structure:")
@@ -393,32 +412,35 @@ def main():
             print(f"    ├── excel_exports/")
             print(f"    │   ├── {os.path.basename(excel_file) if excel_file else 'No Excel export'}")
             print(f"    │   │   (includes delay columns: Stage_Delay_Days, Stage_Status)")
+            print(f"    │   ├── {os.path.basename(stage_level_file) if stage_level_file else 'No stage-level export'}")
+            print(f"    │   │   ⭐ (3 tabs: actual_timestamps, timestamps, delay_days)")
             print(f"    │   └── {os.path.basename(delay_report_file) if delay_report_file else 'No delay report'}")
             print(f"    ├── csv_files/")
             print(f"    │   └── {os.path.basename(processed_csv_file) if processed_csv_file else 'No CSV file'}")
             print(f"    └── logs/")
             print(f"        └── tat_calculation.log")
             
-            print(f"\n✅ Key Enhancement: TAT results now include delay information!")
-            print(f"   Each stage has: delay_days, delay_status, delay_reason")
-            print(f"   Summary includes: delay counts, total delay days, critical path delays")
+            print(f"\n✅ New Feature: Stage-Level Excel Export!")
+            print(f"   📋 actual_timestamps tab: Actual timestamps from PO data")
+            print(f"   ⏱️  timestamps tab: Calculated timestamps from TAT processing")
+            print(f"   📊 delay_days tab: Delay days for each stage")
+            print(f"   Format: PO_ID vs All Stages in matrix layout")
             
-            # Show example of integrated delay info
-            if results and 'stages' in results[0]:
-                example_stage = list(results[0]['stages'].values())[0]
-                if 'delay_days' in example_stage:
-                    print(f"\n💡 Example stage result:")
-                    print(f"   {{")
-                    print(f"     \"name\": \"{example_stage['name']}\",")
-                    print(f"     \"timestamp\": \"{example_stage['timestamp']}\",")
-                    print(f"     \"delay_days\": {example_stage['delay_days']},")
-                    print(f"     \"delay_status\": \"{example_stage['delay_status']}\",")
-                    print(f"     \"delay_reason\": \"{example_stage.get('delay_reason', 'N/A')}\",")
-                    print(f"     ...")
-                    print(f"   }}")
+            # Show example of stage-level output structure
+            if stage_level_file:
+                print(f"\n💡 Stage-Level Excel Structure:")
+                print(f"   Tab 1: actual_timestamps")
+                print(f"   ┌─────────────┬──────────────────┬─────────────────┬───")
+                print(f"   │ PO_ID       │ 01. PO Approval  │ 02. Supplier... │ ...")
+                print(f"   ├─────────────┼──────────────────┼─────────────────┼───")
+                print(f"   │ PO123...    │ 2025-06-01       │ 2025-06-03      │ ...")
+                print(f"   └─────────────┴──────────────────┴─────────────────┴───")
+                print(f"   ")
+                print(f"   Tab 2: timestamps (calculated)")
+                print(f"   Tab 3: delay_days (difference analysis)")
             
         print(f"\n💡 To process all POs, change sample_size=None in the run_calculations() call")
-        print("🎯 TAT Calculation with integrated delays completed successfully!")
+        print("🎯 TAT Calculation with stage-level analysis completed successfully!")
         
     except Exception as e:
         logger.error(f"Error in main execution: {e}")
