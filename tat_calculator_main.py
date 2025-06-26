@@ -3,6 +3,7 @@ TAT Calculator Main Module
 =========================
 
 Main TATCalculator class that coordinates all sub-modules.
+Updated to include integrated delay information in TAT results.
 """
 
 import logging
@@ -29,6 +30,8 @@ class TATCalculator:
     - Stage calculations (stage_calculator)
     - TAT processing and export (tat_processor)
     - Delay analysis (delay_calculator)
+    
+    Updated to include delay information directly in TAT results.
     """
     
     def __init__(self, config_path: str = "stages_config.json"):
@@ -50,56 +53,60 @@ class TATCalculator:
         
         logger.info(f"TAT Calculator initialized with {len(self.config.stages)} stages")
     
-    def calculate_tat(self, po_row: pd.Series) -> Dict[str, Any]:
+    def calculate_tat(self, po_row: pd.Series, include_delays: bool = True) -> Dict[str, Any]:
         """
-        Calculate TAT for all stages of a PO
+        Calculate TAT for all stages of a PO with integrated delay information
         
         Args:
             po_row: Pandas Series containing PO data
+            include_delays: Whether to include delay calculations in results (default: True)
             
         Returns:
-            Dictionary with complete TAT calculation results
+            Dictionary with complete TAT calculation results including delay info
         """
-        return self.tat_processor.calculate_tat(po_row)
+        return self.tat_processor.calculate_tat(po_row, include_delays=include_delays)
     
     def calculate_delay(self, tat_result: Dict[str, Any], po_row: pd.Series) -> Dict[str, Any]:
         """
-        Calculate delays for all stages based on TAT results
+        Calculate delays for all stages based on TAT results (separate analysis)
         
         Args:
             tat_result: TAT calculation result
             po_row: Original PO data row
             
         Returns:
-            Dictionary with delay analysis
+            Dictionary with detailed delay analysis
         """
         return self.delay_calculator.calculate_all_delays(tat_result, po_row)
     
-    def process_batch(self, df: pd.DataFrame) -> List[Dict[str, Any]]:
+    def process_batch(self, df: pd.DataFrame, include_delays: bool = True) -> List[Dict[str, Any]]:
         """
-        Process multiple POs in batch
+        Process multiple POs in batch with integrated delay information
         
         Args:
             df: DataFrame containing multiple PO rows
+            include_delays: Whether to include delay calculations (default: True)
             
         Returns:
-            List of TAT calculation results
+            List of TAT calculation results with delay information
         """
-        return self.tat_processor.process_batch(df)
+        return self.tat_processor.process_batch(df, include_delays=include_delays)
     
     def process_batch_with_delays(self, df: pd.DataFrame) -> tuple[List[Dict[str, Any]], List[Dict[str, Any]]]:
         """
-        Process multiple POs and calculate delays
+        Process multiple POs and calculate detailed delays (separate analysis)
         
         Args:
             df: DataFrame containing multiple PO rows
             
         Returns:
-            Tuple of (TAT results, Delay results)
+            Tuple of (TAT results with integrated delays, Detailed delay analysis)
         """
-        tat_results = self.process_batch(df)
-        delay_results = []
+        # Get TAT results with integrated delay info
+        tat_results = self.process_batch(df, include_delays=True)
         
+        # Generate detailed delay analysis
+        delay_results = []
         for i, tat_result in enumerate(tat_results):
             if 'error' not in tat_result:
                 po_row = df.iloc[i]
@@ -110,21 +117,21 @@ class TATCalculator:
     
     def export_to_excel(self, df: pd.DataFrame, results: List[Dict[str, Any]], output_file: str):
         """
-        Export original data + calculated timestamps to Excel
+        Export original data + calculated timestamps + delay info to Excel
         
         Args:
             df: Original DataFrame
-            results: TAT calculation results
+            results: TAT calculation results (with integrated delay info)
             output_file: Output Excel file path
         """
         self.tat_processor.export_to_excel(df, results, output_file)
     
     def export_delay_report(self, delay_results: List[Dict[str, Any]], output_file: str):
         """
-        Export delay analysis report to Excel
+        Export detailed delay analysis report to Excel
         
         Args:
-            delay_results: List of delay analysis results
+            delay_results: List of detailed delay analysis results
             output_file: Output Excel file path
         """
         self.delay_calculator.export_delay_report(delay_results, output_file)
@@ -144,9 +151,25 @@ class TATCalculator:
 
 
 if __name__ == "__main__":
-    print("TAT Calculator System - Modularized Version with Delay Analysis")
-    print("Usage:")
-    print("1. calculator = TATCalculator()")
-    print("2. tat_results, delay_results = calculator.process_batch_with_delays(df)")
-    print("3. calculator.export_to_excel(df, tat_results, 'tat_output.xlsx')")
-    print("4. calculator.export_delay_report(delay_results, 'delay_report.xlsx')")
+    print("TAT Calculator System - Enhanced with Integrated Delay Information")
+    print("=" * 65)
+    print("Key Features:")
+    print("✅ Integrated delay info in TAT results (delay_days, delay_status)")
+    print("✅ Organized output folder structure")
+    print("✅ Comprehensive delay analysis")
+    print("✅ Excel export with delay columns")
+    print()
+    print("Usage Examples:")
+    print("1. Basic TAT calculation with delays:")
+    print("   calculator = TATCalculator()")
+    print("   result = calculator.calculate_tat(po_row)")
+    print("   # result['stages']['8']['delay_days'] = 5")
+    print("   # result['stages']['8']['delay_status'] = 'delayed'")
+    print()
+    print("2. Batch processing:")
+    print("   results = calculator.process_batch(df)")
+    print("   calculator.export_to_excel(df, results, 'outputs/excel_exports/tat_with_delays.xlsx')")
+    print()
+    print("3. Detailed delay analysis:")
+    print("   tat_results, delay_results = calculator.process_batch_with_delays(df)")
+    print("   calculator.export_delay_report(delay_results, 'outputs/excel_exports/delay_analysis.xlsx')")
