@@ -126,6 +126,20 @@ class TATCalculator:
         """
         self.tat_processor.export_to_excel(df, results, output_file)
     
+    def export_stage_level_excel(self, df: pd.DataFrame, results: List[Dict[str, Any]], output_file: str):
+        """
+        Export stage-level data to Excel with 3 separate tabs:
+        - actual_timestamps: Actual timestamps from PO data
+        - timestamps: Calculated timestamps from TAT processing  
+        - delay_days: Delay days for each stage
+        
+        Args:
+            df: Original DataFrame
+            results: TAT calculation results
+            output_file: Output Excel file path
+        """
+        self.tat_processor.export_stage_level_excel(df, results, output_file)
+    
     def export_delay_report(self, delay_results: List[Dict[str, Any]], output_file: str):
         """
         Export detailed delay analysis report to Excel
@@ -158,6 +172,7 @@ if __name__ == "__main__":
     print("✅ Organized output folder structure")
     print("✅ Comprehensive delay analysis")
     print("✅ Excel export with delay columns")
+    print("✅ Stage-level Excel export with 3 tabs")
     print()
     print("Usage Examples:")
     print("1. Basic TAT calculation with delays:")
@@ -170,6 +185,10 @@ if __name__ == "__main__":
     print("   results = calculator.process_batch(df)")
     print("   calculator.export_to_excel(df, results, 'outputs/excel_exports/tat_with_delays.xlsx')")
     print()
-    print("3. Detailed delay analysis:")
+    print("3. Stage-level Excel export:")
+    print("   calculator.export_stage_level_excel(df, results, 'outputs/excel_exports/stage_level.xlsx')")
+    print("   # Creates 3 tabs: actual_timestamps, timestamps, delay_days")
+    print()
+    print("4. Detailed delay analysis:")
     print("   tat_results, delay_results = calculator.process_batch_with_delays(df)")
     print("   calculator.export_delay_report(delay_results, 'outputs/excel_exports/delay_analysis.xlsx')")
