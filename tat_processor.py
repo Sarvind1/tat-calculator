@@ -3,11 +3,13 @@ TAT Processor Module
 ====================
 
 Main TAT processing orchestrator with batch processing and export capabilities.
+Updated to support organized output folder structure.
 """
 
 import logging
 from datetime import datetime
 from typing import Dict, List, Any
+from pathlib import Path
 import pandas as pd
 from models_config import StagesConfig
 from stage_calculator import StageCalculator
@@ -18,11 +20,27 @@ logger = logging.getLogger(__name__)
 class TATProcessor:
     """
     Orchestrates TAT calculations across all stages and handles output formatting.
+    Now supports organized folder structure for outputs.
     """
     
     def __init__(self, config: StagesConfig, stage_calculator: StageCalculator):
         self.config = config
         self.stage_calculator = stage_calculator
+        # Ensure organized output folders exist
+        self._ensure_output_folders()
+    
+    def _ensure_output_folders(self):
+        """Ensure all output folders exist"""
+        folders = [
+            'outputs/tat_results',
+            'outputs/delay_results', 
+            'outputs/excel_exports',
+            'outputs/csv_files',
+            'outputs/logs'
+        ]
+        
+        for folder in folders:
+            Path(folder).mkdir(parents=True, exist_ok=True)
     
     def calculate_tat(self, po_row: pd.Series) -> Dict[str, Any]:
         """
@@ -180,8 +198,12 @@ class TATProcessor:
         Args:
             df: Original DataFrame
             results: TAT calculation results
-            output_file: Output Excel file path
+            output_file: Output Excel file path (should include organized folder path)
         """
+        # Ensure the directory exists (in case called with custom path)
+        output_path = Path(output_file)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
         # Create a copy of the original dataframe
         export_df = df.copy()
         
@@ -212,3 +234,24 @@ class TATProcessor:
         # Save to Excel
         export_df.to_excel(output_file, index=False)
         logger.info(f"Results exported to: {output_file}")
+    
+    def save_to_csv(self, df: pd.DataFrame, filename_prefix: str = "processed_data") -> str:
+        """
+        Save processed DataFrame to organized CSV folder
+        
+        Args:
+            df: DataFrame to save
+            filename_prefix: Prefix for filename
+            
+        Returns:
+            Full path of saved file
+        """
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"outputs/csv_files/{filename_prefix}_{timestamp}.csv"
+        
+        # Ensure directory exists
+        Path(filename).parent.mkdir(parents=True, exist_ok=True)
+        
+        df.to_csv(filename, index=False)
+        logger.info(f"CSV saved to: {filename}")
+        return filename
