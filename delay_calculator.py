@@ -3,11 +3,13 @@ Delay Calculation Module
 ========================
 
 Calculates stage-level delays by comparing target timestamps with actual timestamps.
+Updated to support organized output folder structure.
 """
 
 import logging
 from datetime import datetime, timedelta
 from typing import Dict, List, Any, Optional, Tuple
+from pathlib import Path
 import pandas as pd
 from models_config import StagesConfig
 
@@ -17,12 +19,26 @@ logger = logging.getLogger(__name__)
 class DelayCalculator:
     """
     Calculates delays for each stage by comparing target vs actual timestamps.
+    Now supports organized folder structure for outputs.
     
     Delay = Actual Timestamp - Target Timestamp (positive means delayed)
     """
     
     def __init__(self, config: StagesConfig):
         self.config = config
+        # Ensure organized output folders exist
+        self._ensure_output_folders()
+    
+    def _ensure_output_folders(self):
+        """Ensure all output folders exist"""
+        folders = [
+            'outputs/delay_results',
+            'outputs/excel_exports',
+            'outputs/logs'
+        ]
+        
+        for folder in folders:
+            Path(folder).mkdir(parents=True, exist_ok=True)
     
     def calculate_stage_delay(self, stage_id: str, stage_result: Dict[str, Any], po_row: pd.Series) -> Dict[str, Any]:
         """
@@ -265,7 +281,11 @@ class DelayCalculator:
         return insights
     
     def export_delay_report(self, delay_results: List[Dict[str, Any]], output_file: str):
-        """Export delay analysis to Excel with multiple sheets"""
+        """Export delay analysis to Excel with multiple sheets using organized folder structure"""
+        # Ensure the directory exists (in case called with custom path)
+        output_path = Path(output_file)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        
         with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
             # Sheet 1: Summary
             summary_data = []
@@ -297,3 +317,31 @@ class DelayCalculator:
                 pd.DataFrame(team_data).to_excel(writer, sheet_name='Team Performance', index=False)
         
         logger.info(f"Delay report exported to: {output_file}")
+    
+    def save_delay_analysis_csv(self, delay_results: List[Dict[str, Any]], filename_prefix: str = "delay_analysis") -> str:
+        """
+        Save delay analysis results to organized CSV folder
+        
+        Args:
+            delay_results: List of delay analysis results
+            filename_prefix: Prefix for filename
+            
+        Returns:
+            Full path of saved file
+        """
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        filename = f"outputs/csv_files/{filename_prefix}_{timestamp}.csv"
+        
+        # Ensure directory exists
+        Path(filename).parent.mkdir(parents=True, exist_ok=True)
+        
+        # Flatten delay results for CSV
+        csv_data = []
+        for result in delay_results:
+            for delay in result["stage_delays"]:
+                delay["po_id"] = result["po_id"]
+                csv_data.append(delay)
+        
+        pd.DataFrame(csv_data).to_csv(filename, index=False)
+        logger.info(f"Delay analysis CSV saved to: {filename}")
+        return filename
