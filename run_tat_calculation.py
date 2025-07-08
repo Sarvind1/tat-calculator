@@ -207,7 +207,7 @@ class TATRunner:
         return filename
     
     def export_stage_level_excel(self, filename_prefix: str = "stage_level_analysis"):
-        """Export stage-level data to Excel with 5 tabs"""
+        """Export stage-level data to Excel with 7 tabs"""
         if not self.results:
             logger.warning("No results to export")
             return
@@ -306,8 +306,20 @@ def main():
             print(f"\n📁 Output Files:")
             print(f"├── TAT Results: {results_file}")
             print(f"├── Excel Export: {stage_level_file}")
-            print(f"│   └── 5 tabs: Method, Actual_Timestamps, Target_Timestamps, Final_Timestamps, Delay")
+            print(f"│   └── 7 tabs:")
+            print(f"│       ├── Method: Shows Projected/Actual/Adjusted")
+            print(f"│       ├── Actual_Timestamps: Actual dates from data")
+            print(f"│       ├── Target_Timestamps: Calculated target dates")
+            print(f"│       ├── Final_Timestamps: Final dates used")
+            print(f"│       ├── Delay: Delay in days (negative = early)")
+            print(f"│       ├── Precedence_Method: Projected or Actual/Adjusted")
+            print(f"│       └── Calculation_Source: How final was calculated")
             print(f"└── CSV File: {processed_csv_file}")
+            
+            print(f"\n💡 Debugging Features:")
+            print(f"   - Calculation_Source tab shows exactly how each timestamp was determined")
+            print(f"   - Precedence_Method helps track if delays propagate from preceding stages")
+            print(f"   - Method tab clearly shows which stages have actual data vs projections")
             
         print("\n✅ TAT Calculation completed successfully!")
         
