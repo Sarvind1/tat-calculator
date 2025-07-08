@@ -98,6 +98,8 @@ class TATProcessor:
                 "final_timestamp": calc_details.get("final_timestamp"),
                 "delay": calc_details.get("delay"),
                 "lead_time": calc_details.get("lead_time_applied"),
+                "precedence_method": calc_details.get("precedence_method"),
+                "calculation_source": calc_details.get("calculation_source"),
                 "process_flow": {
                     "team_owner": stage_config.process_flow.team_owner,
                     "process_type": stage_config.process_flow.process_type,
@@ -151,12 +153,14 @@ class TATProcessor:
 
     def export_stage_level_excel(self, df: pd.DataFrame, results: List[Dict[str, Any]], output_file: str):
         """
-        Export stage-level data to Excel with 5 separate tabs:
+        Export stage-level data to Excel with 7 separate tabs:
         - Method: Method used for each stage (Projected/Actual/Adjusted)
         - Actual_Timestamps: Actual timestamps for each stage
         - Target_Timestamps: Target timestamps for each stage
         - Final_Timestamps: Final timestamps used for each stage
         - Delay: Delay in days for each stage
+        - Precedence_Method: Whether preceding stages were Projected or Actual/Adjusted
+        - Calculation_Source: How the final timestamp was calculated
         
         Args:
             df: Original DataFrame
@@ -177,6 +181,8 @@ class TATProcessor:
         target_timestamps_data = {}
         final_timestamps_data = {}
         delay_data = {}
+        precedence_method_data = {}
+        calculation_source_data = {}
         
         # Initialize stage columns
         for stage_id, stage_config in stage_configs.items():
@@ -186,6 +192,8 @@ class TATProcessor:
             target_timestamps_data[stage_name] = []
             final_timestamps_data[stage_name] = []
             delay_data[stage_name] = []
+            precedence_method_data[stage_name] = []
+            calculation_source_data[stage_name] = []
         
         # Process each result
         for result in results:
@@ -225,6 +233,14 @@ class TATProcessor:
                 # 5. Delay days
                 delay_days = stage_result.get('delay')
                 delay_data[stage_name].append(delay_days)
+                
+                # 6. Precedence method
+                precedence_method = stage_result.get('precedence_method', '')
+                precedence_method_data[stage_name].append(precedence_method)
+                
+                # 7. Calculation source
+                calculation_source = stage_result.get('calculation_source', '')
+                calculation_source_data[stage_name].append(calculation_source)
         
         # Create DataFrames for each tab
         method_df = pd.DataFrame({'PO_ID': po_ids, **method_data})
@@ -232,6 +248,8 @@ class TATProcessor:
         target_df = pd.DataFrame({'PO_ID': po_ids, **target_timestamps_data})
         final_df = pd.DataFrame({'PO_ID': po_ids, **final_timestamps_data})
         delay_df = pd.DataFrame({'PO_ID': po_ids, **delay_data})
+        precedence_df = pd.DataFrame({'PO_ID': po_ids, **precedence_method_data})
+        calc_source_df = pd.DataFrame({'PO_ID': po_ids, **calculation_source_data})
         
         # Write to Excel with multiple tabs
         with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
@@ -240,6 +258,8 @@ class TATProcessor:
             target_df.to_excel(writer, sheet_name='Target_Timestamps', index=False)
             final_df.to_excel(writer, sheet_name='Final_Timestamps', index=False)
             delay_df.to_excel(writer, sheet_name='Delay', index=False)
+            precedence_df.to_excel(writer, sheet_name='Precedence_Method', index=False)
+            calc_source_df.to_excel(writer, sheet_name='Calculation_Source', index=False)
         
         logger.info(f"Stage-level results exported to: {output_file}")
         logger.info(f"  - Method tab: {len(po_ids)} POs x {len(stage_configs)} stages")
@@ -247,6 +267,8 @@ class TATProcessor:
         logger.info(f"  - Target_Timestamps tab: {len(po_ids)} POs x {len(stage_configs)} stages")
         logger.info(f"  - Final_Timestamps tab: {len(po_ids)} POs x {len(stage_configs)} stages")
         logger.info(f"  - Delay tab: {len(po_ids)} POs x {len(stage_configs)} stages")
+        logger.info(f"  - Precedence_Method tab: {len(po_ids)} POs x {len(stage_configs)} stages")
+        logger.info(f"  - Calculation_Source tab: {len(po_ids)} POs x {len(stage_configs)} stages")
     
     def save_to_csv(self, df: pd.DataFrame, filename_prefix: str = "processed_data") -> str:
         """
