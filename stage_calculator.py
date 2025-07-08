@@ -66,7 +66,8 @@ class StageCalculator:
             "lead_time_applied": stage.lead_time,
             "dependencies": [],
             "actual_field": stage.actual_timestamp,
-            "precedence_method": None
+            "precedence_method": None,
+            "calculation_source": None  # New field to track how final was calculated
         }
         
         # 1. Get preceding stages and calculate target timestamp
@@ -113,6 +114,7 @@ class StageCalculator:
         if preceding_final_timestamps:
             base_timestamp = max(preceding_final_timestamps)
             calc_details["target_timestamp"] = (base_timestamp + timedelta(days=stage.lead_time)).isoformat()
+            calc_details["calculation_source"] = "precedence_based"
         else:
             # No preceding stages - use fallback for target
             fallback_result, _ = self.expression_evaluator.evaluate_expression(
@@ -120,6 +122,7 @@ class StageCalculator:
             )
             if fallback_result:
                 calc_details["target_timestamp"] = (fallback_result + timedelta(days=stage.lead_time)).isoformat()
+                calc_details["calculation_source"] = "fallback_based"
         
         # Set precedence method
         calc_details["precedence_method"] = "Projected" if has_projected_precedence else "Actual/Adjusted"
@@ -143,15 +146,18 @@ class StageCalculator:
                 calc_details["method"] = "Adjusted"
                 calc_details["actual_timestamp"] = max_preceding_actual.isoformat()
                 calc_details["final_timestamp"] = max_preceding_actual.isoformat()
+                calc_details["calculation_source"] = "actual_from_precedence"
             else:
                 # Use current actual - method is Actual
                 calc_details["method"] = "Actual"
                 calc_details["actual_timestamp"] = current_actual_timestamp.isoformat()
                 calc_details["final_timestamp"] = current_actual_timestamp.isoformat()
+                calc_details["calculation_source"] = "actual_from_field"
         else:
             # No actual timestamp - method is Projected
             calc_details["method"] = "Projected"
             calc_details["final_timestamp"] = calc_details["target_timestamp"]
+            calc_details["calculation_source"] = calc_details["calculation_source"] + "_target" if calc_details["calculation_source"] else "target"
             # For projected, try to inherit preceding actual
             if preceding_actual_timestamps:
                 calc_details["actual_timestamp"] = max(preceding_actual_timestamps).isoformat()
