@@ -13,6 +13,11 @@
    - Added actual_timestamp handling with precedence comparison
    - Added final_timestamp: target (if Projected) or actual (if Actual/Adjusted)
    - Integrated delay calculation: target - actual (only for Actual/Adjusted)
+   - Added calculation_source field to track how final timestamp was determined:
+     * "precedence_based_target" - from preceding stages' target
+     * "fallback_based_target" - from fallback when no precedence
+     * "actual_from_field" - from actual field in data
+     * "actual_from_precedence" - from preceding stage's actual (Adjusted method)
    - Removed complex precedence logic
 
 2. **Deleted `delay_calculator.py`**:
@@ -21,12 +26,14 @@
 
 3. **Modified `tat_processor.py`**:
    - Updated to handle new calculation structure
-   - Implemented 5-tab Excel export format:
+   - Implemented 7-tab Excel export format:
      * Method tab: Shows Projected/Actual/Adjusted for each stage
      * Actual_Timestamps tab: Actual timestamps from data
      * Target_Timestamps tab: Calculated target timestamps
      * Final_Timestamps tab: Final timestamps used
      * Delay tab: Delay in days (only for Actual/Adjusted)
+     * Precedence_Method tab: Shows if preceding stages were Projected or Actual/Adjusted
+     * Calculation_Source tab: Shows how final timestamp was calculated
    - Removed separate delay processing logic
    - Simplified JSON output structure
 
@@ -34,6 +41,10 @@
    - Removed delay calculator imports and references
    - Simplified main orchestration logic
    - Updated documentation to reflect new approach
+
+5. **Modified `run_tat_calculation.py`**:
+   - Fixed to use new export_stage_level_excel method
+   - Removed references to deleted methods
 
 #### Key Logic Changes:
 
@@ -48,18 +59,23 @@
 - `final_timestamp` = target (if Projected) or actual (if Actual/Adjusted)
 - `delay` = target - actual (only calculated for Actual/Adjusted methods)
 
+**Calculation Source Tracking:**
+- Helps debug by showing exactly how each final timestamp was determined
+- Tracks whether it came from precedence, fallback, actual field, or adjusted from precedence
+
 **Fallback Handling:**
 - Fallback calculations remain for stages without preceding stages
 - New method determination applied to fallback results
 
 #### Output Changes:
-- Excel export now has 5 tabs instead of 3
-- JSON structure simplified with new fields
-- Removed separate delay calculation files
+- Excel export now has 7 tabs instead of 5
+- JSON structure includes precedence_method and calculation_source fields
+- Better debugging capabilities with calculation source tracking
 
 #### Files Affected:
 - `stage_calculator.py` - Modified
-- `tat_processor.py` - Modified
+- `tat_processor.py` - Modified  
 - `tat_calculator_main.py` - Modified
+- `run_tat_calculation.py` - Modified
 - `delay_calculator.py` - Deleted
-- `commits_guide.md` - Created/Updated
+- `commits_guide.md` - Updated
