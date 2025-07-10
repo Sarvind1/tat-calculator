@@ -1,6 +1,34 @@
 # TAT Calculator - Commits Guide
 
-## Latest Changes (January 2025)
+## Latest Changes (July 2025)
+
+### Bug Fix: Precedence Method Logic
+**Date**: 2025-07-10
+**Branch**: main
+
+#### Changes Made:
+1. **Modified `stage_calculator.py`**:
+   - Fixed `precedence_method` logic to properly handle stages without dependencies
+   - Now sets `precedence_method = "no precedence"` for stages with empty dependencies
+   - Updated to check both `method` and `precedence_method` when propagating "Projected" status through dependency chain
+   - This ensures proper tracking of projection quality through the entire chain
+
+#### Key Logic Changes:
+
+**Precedence Method Determination:**
+- If stage has dependencies:
+  - Check if ANY predecessor has `method == "Projected"` OR `precedence_method == "Projected"`
+  - If yes: `precedence_method = "Projected"`
+  - If no: `precedence_method = "Actual/Adjusted"`
+- If stage has NO dependencies:
+  - `precedence_method = "no precedence"`
+
+This fix addresses issues where:
+- Stages without dependencies incorrectly showed "Actual/Adjusted"
+- "Projected" status wasn't properly propagating through dependency chains
+- Conditional expressions resulting in empty dependencies weren't handled properly
+
+## Previous Changes (January 2025)
 
 ### Refactoring: Simplified TAT Calculation Logic
 **Date**: 2025-01-08
