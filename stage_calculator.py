@@ -74,6 +74,7 @@ class StageCalculator:
         preceding_final_timestamps = []
         preceding_actual_timestamps = []
         has_projected_precedence = False
+        preceding_stage_ids = []
         
         if stage.preceding_stage:
             # Evaluate preceding stage expression
@@ -98,8 +99,9 @@ class StageCalculator:
                                 datetime.fromisoformat(prec_details["actual_timestamp"])
                             )
                         
-                        # Check if any preceding stage is projected
-                        if prec_details.get("method") == "Projected":
+                        # Check if any preceding stage is projected or has projected precedence
+                        if (prec_details.get("method") == "Projected" or 
+                            prec_details.get("precedence_method") == "Projected"):
                             has_projected_precedence = True
                         
                         # Add to dependencies
@@ -125,7 +127,12 @@ class StageCalculator:
                 calc_details["calculation_source"] = "fallback_based"
         
         # Set precedence method
-        calc_details["precedence_method"] = "Projected" if has_projected_precedence else "Actual/Adjusted"
+        if preceding_stage_ids and len(preceding_stage_ids) > 0:
+            # Has dependencies - check if any predecessor in chain is projected
+            calc_details["precedence_method"] = "Projected" if has_projected_precedence else "Actual/Adjusted"
+        else:
+            # No dependencies - no precedence to evaluate
+            calc_details["precedence_method"] = "no precedence"
         
         # 2. Get actual timestamp if available
         current_actual_timestamp = None
