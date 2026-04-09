@@ -1,63 +1,71 @@
 # TAT Calculator
 
-A Python-based system for calculating adjusted turnaround times across configurable Purchase Order (PO) processing workflow stages. Replaces complex Excel formulas with maintainable, dependency-driven Python code that supports dynamic expressions and transparent reasoning.
+A Python-based system for calculating Turnaround Time (TAT) adjustments across Purchase Order (PO) processing workflow stages. Replaces complex Excel formulas with configurable, maintainable Python code that supports dynamic expressions, stage dependencies, and transparent reasoning.
 
-## Key Features
+## Features
 
-- **Configurable Stage Workflow** – Define processing stages, dependencies, and lead times in JSON
-- **Dynamic Expression Evaluation** – Support for custom expressions with fallback calculations
-- **Dependency-Driven Calculations** – Automatic handling of sequential and parallel process dependencies
-- **Comprehensive Reporting** – Output results in JSON, CSV, and Excel formats
-- **Configuration Validation** – Built-in validator to check stages configuration for syntax and compatibility errors
-- **Transparent Reasoning** – Clear logging and audit trails for all calculations
+- **Configurable Stage Processing**: Define workflow stages with dependencies, lead times, and fallback calculations
+- **Dynamic Expression Evaluation**: Support for custom expressions and business logic in stage definitions
+- **Comprehensive Reporting**: Generate results in JSON, Excel, and CSV formats
+- **Validation Framework**: Built-in validation for configuration files and stage dependencies
+- **Detailed Logging**: Track calculation logic and identify issues with full audit trails
 
 ## Tech Stack
 
 - **Python 3.x**
-- **pandas** – Data processing and Excel I/O
-- **pydantic** – Configuration validation and type checking
-- **numpy** – Numerical operations
+- **Pandas**: Data processing and Excel handling
+- **Pydantic**: Configuration validation and type safety
+- **NumPy**: Numerical operations
+- **Logging**: Comprehensive audit trails
 
-## Installation
+## Setup
 
-1. Clone the repository
-2. Create and activate a virtual environment:
+1. Clone the repository and navigate to the project directory:
+   ```bash
+   cd tat-calculator
+   ```
+
+2. Create a virtual environment and install dependencies:
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
-   ```
-3. Install dependencies:
-   ```bash
    pip install -r requirements.txt
    ```
 
-## Configuration
+3. Configure your workflow stages in `stages_config.json`
 
-Edit `stages_config.json` to define your workflow stages with:
-- Stage names and preceding dependencies
-- Actual timestamp fields from your data
-- Lead times (in days)
-- Process flow metadata (critical path, team ownership, handoff points)
-- Fallback calculation expressions
+4. Prepare your PO data in Excel format (e.g., `ts_big.xlsx`)
 
 ## Usage
 
-Run the TAT calculation on your Excel data:
+Run the complete TAT calculation system:
 
 ```bash
 python run_tat_calculation.py
 ```
 
-Results are generated in the `outputs/` directory:
-- `tat_results/` – JSON output with detailed calculations
-- `csv_files/` – Processed data in CSV format
-- `excel_exports/` – Stage-level analysis in Excel
-- `logs/` – Calculation logs and audit trails
+This will:
+- Load your Excel data
+- Process each PO through configured stages
+- Generate output files in `outputs/` directory:
+  - `tat_results/`: Detailed calculation results (JSON)
+  - `excel_exports/`: Analysis summaries (Excel)
+  - `csv_files/`: Processed data (CSV)
+  - `logs/`: Calculation logs and audit trails
 
-## Validation
-
-Validate your configuration before running calculations:
+Validate your configuration:
 
 ```bash
-python -c "from stage_config_validator import StageConfigValidator; StageConfigValidator().validate_config_file('stages_config.json')"
+python stage_config_validator.py
 ```
+
+## Configuration
+
+Edit `stages_config.json` to define:
+- Stage names and identifiers
+- Dependencies between stages
+- Lead time adjustments
+- Fallback calculations for missing data
+- Process flow metadata (critical path, team ownership, handoff points)
+
+See `documentation/` for detailed configuration guides.
