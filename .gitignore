@@ -1,34 +1,13 @@
-# Duplicate and archive files
-tat-calculator copy/
-tat-calculator copy.zip
-
-# Generated outputs (results, reports, logs)
-outputs/
-
-# Large data files and test fixtures
-ts_big.xlsx
-ts_big copy.xlsx
-ts_small.xlsx
-ts_small_1.xlsx
-*.log
-dod_sql_output*.xlsx
-~$*.xlsx
-
-# Excel temp files
-~$*
-
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
+*.py[cod]
+*$py.class
 *.so
-*.egg
+.Python
 *.egg-info/
 dist/
 build/
-.eggs/
+*.egg
 
 # Virtual environments
 .venv/
@@ -36,7 +15,12 @@ venv/
 env/
 ENV/
 
-# IDEs
+# Environment variables
+.env
+.env.*
+*.env
+
+# IDE
 .vscode/
 .idea/
 *.swp
@@ -46,16 +30,22 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 
-# Environment files
-.env
-.env.local
-.env.*.local
+# Large data files and outputs
+outputs/
+*.log
+*.xlsx
+*.xls
+~$*.*
 
-# Jupyter
-.ipynb_checkpoints/
+# Test data files
+ts_big.xlsx
+ts_small.xlsx
+ts_big\ copy.xlsx
+ts_small_1.xlsx
+
+# Archive files
+*.zip
+
+# Large result files
+tat_results/*.json
