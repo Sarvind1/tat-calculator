@@ -1,0 +1,61 @@
+# Duplicate and archive files
+tat-calculator copy/
+tat-calculator copy.zip
+
+# Generated outputs (results, reports, logs)
+outputs/
+
+# Large data files and test fixtures
+ts_big.xlsx
+ts_big copy.xlsx
+ts_small.xlsx
+ts_small_1.xlsx
+*.log
+dod_sql_output*.xlsx
+~$*.xlsx
+
+# Excel temp files
+~$*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Jupyter
+.ipynb_checkpoints/
