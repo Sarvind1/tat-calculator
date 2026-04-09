@@ -13,7 +13,7 @@
       "fallback_calculation": {
         "expression": "po_created_date"
       },
-      "lead_time": 2
+      "lead_time": "2"
     },
     "2": {
       "name": "02. Supplier Confirmation Pending",
@@ -28,11 +28,11 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 3
+      "lead_time": "3"
     },
     "3": {
       "name": "03. PI Upload Pending",
-      "actual_timestamp": "pi_invoice_approval_date",
+      "actual_timestamp": "",
       "preceding_stage": "cond(pi_applicable==1, ['2'], [])",
       "process_flow": {
         "critical_path": true,
@@ -43,12 +43,12 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "4": {
       "name": "04. PI Approval Pending",
-      "actual_timestamp": "cond(pi_applicable==1, ['3'], [])",
-      "preceding_stage": "['3']",
+      "actual_timestamp": "pi_invoice_approval_date",
+      "preceding_stage": "cond(pi_applicable==1, ['3'], [])",
       "process_flow": {
         "critical_path": true,
         "parallel_processes": [],
@@ -56,9 +56,9 @@
         "team_owner": "Finance"
       },
       "fallback_calculation": {
-        "expression": "max(supplier_confirmation_date, add_days(po_approval_date, 5))"
+        "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "2"
     },
     "5": {
       "name": "05. PI Payment Pending",
@@ -71,9 +71,9 @@
         "team_owner": "Finance"
       },
       "fallback_calculation": {
-        "expression": "max(pi_invoice_approval_date, add_days(supplier_confirmation_date, 2))"
+        "expression": ""
       },
-      "lead_time": 5
+      "lead_time": "5"
     },
     "6": {
       "name": "06. Packaging Pending",
@@ -88,7 +88,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 3
+      "lead_time": "3"
     },
     "7": {
       "name": "07. Transparency Label Pending",
@@ -103,7 +103,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "2"
     },
     "8": {
       "name": "08. PRD Pending",
@@ -118,12 +118,12 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "2"
     },
     "9": {
       "name": "09. Under Production",
       "actual_timestamp": "",
-      "preceding_stage": "['8']",
+      "preceding_stage": "",
       "process_flow": {
         "critical_path": true,
         "parallel_processes": [],
@@ -131,9 +131,9 @@
         "team_owner": "Supplier"
       },
       "fallback_calculation": {
-        "expression": "max(add_days(receive_first_prd_date, plt -21),stage_8+plt-21)"
+        "expression": "max(add_days(receive_first_prd_date, plt -24),stage_8+plt-24)"
       },
-      "lead_time": 7
+      "lead_time": "7"
     },
     "10": {
       "name": "10. PRD Confirmation Pending",
@@ -146,9 +146,9 @@
         "team_owner": "Procurement"
       },
       "fallback_calculation": {
-        "expression": "max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)"
+        "expression": "max(add_days(receive_first_prd_date, plt -21),stage_8+plt-21)"
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "11": {
       "name": "11. IM Sign-Off Pending",
@@ -163,7 +163,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "cond(prd_reconfirmed_date in [None,''], 2, max(prd_reconfirmed_date, final_prd_date - 21) - prd_reconfirmed_date + 2)"
     },
     "12": {
       "name": "12. Ready for Batching Pending",
@@ -178,7 +178,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "13": {
       "name": "13. Batch Creation Pending",
@@ -193,7 +193,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "14": {
       "name": "14. SM Sign-Off Pending",
@@ -208,7 +208,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "2"
     },
     "15": {
       "name": "15. CI Approval Pending",
@@ -221,9 +221,9 @@
         "team_owner": "Finance"
       },
       "fallback_calculation": {
-        "expression": "None"
+        "expression": ""
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "16": {
       "name": "16. CI Payment Pending",
@@ -236,9 +236,9 @@
         "team_owner": "Finance"
       },
       "fallback_calculation": {
-        "expression": "None"
+        "expression": ""
       },
-      "lead_time": 3
+      "lead_time": "3"
     },
     "17": {
       "name": "17. QC Schedule Pending",
@@ -251,11 +251,11 @@
         "team_owner": "Quality"
       },
       "fallback_calculation": {
-        "expression": "None"
+        "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "2"
     },
-    "18": { 
+    "18": {
       "name": "18. FFW Booking Missing",
       "actual_timestamp": "ffw_booking_ts",
       "preceding_stage": "cond(ci_applicable==1, ['14','16','17'], ['17'])",
@@ -266,9 +266,9 @@
         "team_owner": "Logistics"
       },
       "fallback_calculation": {
-        "expression": "max(ffw_booking_ts, add_days(qc_schedule_date, 2))"
+        "expression": ""
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "19": {
       "name": "19. Supplier Pickup Date Pending",
@@ -276,14 +276,14 @@
       "preceding_stage": "['18']",
       "process_flow": {
         "critical_path": true,
-        "parallel_processes": [],        
+        "parallel_processes": [],
         "process_type": "scheduling",
         "team_owner": "Logistics"
       },
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 3
+      "lead_time": "3"
     },
     "20": {
       "name": "20. Pre Pickup Check",
@@ -298,7 +298,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 0
+      "lead_time": "0"
     },
     "21": {
       "name": "21. FOB Pickup Pending",
@@ -313,7 +313,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "2"
     },
     "22": {
       "name": "22. Non FOB Pickup Pending",
@@ -328,7 +328,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "2"
     },
     "23": {
       "name": "23. INB Creation Pending",
@@ -343,7 +343,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "24": {
       "name": "24. Mark In-Transit Pending",
@@ -358,7 +358,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 3
+      "lead_time": "3"
     },
     "25": {
       "name": "25. BL Approval Pending",
@@ -373,7 +373,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "26": {
       "name": "26. BL Payment Pending - In Transit",
@@ -388,7 +388,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 5
+      "lead_time": "5"
     },
     "27": {
       "name": "27. BL Payment Pending - Arrived",
@@ -403,7 +403,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 3
+      "lead_time": "3"
     },
     "28": {
       "name": "28. Telex Release Pending",
@@ -418,7 +418,7 @@
       "fallback_calculation": {
         "expression": ""
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "29": {
       "name": "29. Stock Delivery Pending",
@@ -431,9 +431,9 @@
         "team_owner": "Logistics"
       },
       "fallback_calculation": {
-        "expression": "max(shipment_stock_delivery_date, add_days(ffwp_telex_release_date, 1))"
+        "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "2"
     },
     "30": {
       "name": "30. Stock Receiving Pending",
@@ -446,9 +446,9 @@
         "team_owner": "Warehouse"
       },
       "fallback_calculation": {
-        "expression": "max(item_receipt_date, add_days(shipment_stock_delivery_date, 2))"
+        "expression": ""
       },
-      "lead_time": 1
+      "lead_time": "1"
     },
     "31": {
       "name": "31. Dispute - PO Closing Pending",
@@ -461,9 +461,9 @@
         "team_owner": "Finance"
       },
       "fallback_calculation": {
-        "expression": "max(actual_delivery_date, add_days(item_receipt_date, 1))"
+        "expression": ""
       },
-      "lead_time": 2
+      "lead_time": "2"
     }
   }
 }
