@@ -35,7 +35,7 @@ class StageConfig(BaseModel):
     preceding_stage: Optional[Union[str, List[str]]] = None
     process_flow: ProcessFlow
     fallback_calculation: FallbackCalculation
-    lead_time: int = Field(ge=0, description="Lead time in days")
+    lead_time: str = Field(description="Lead time in days")
 
 
 class StagesConfig(BaseModel):

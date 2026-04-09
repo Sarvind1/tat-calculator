@@ -15,6 +15,8 @@ import sys
 import traceback
 import os
 
+sys.stdout = open(os.devnull, 'w')
+
 # Set up organized folder structure
 def setup_output_folders():
     """Create organized output folder structure"""
@@ -283,7 +285,7 @@ def main():
     
     try:
         # Initialize runner with ts_small_1.xlsx
-        runner = TATRunner(excel_file="ts_small_1.xlsx")
+        runner = TATRunner(excel_file="dod_sql_output (1).xlsx")
         
         # Setup
         runner.setup()
