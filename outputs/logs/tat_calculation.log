@@ -400,3 +400,95 @@
 2025-06-26 16:42:54,344 - INFO -   - timestamps tab: 5 POs x 31 stages
 2025-06-26 16:42:54,344 - INFO -   - delay_days tab: 5 POs x 31 stages
 2025-06-26 16:42:54,380 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250626_164254.xlsx
+2025-07-01 15:50:56,478 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 15:50:56,478 - INFO - Setting up TAT calculation environment...
+2025-07-01 15:50:56,478 - INFO - Loading Excel file: ts_big.xlsx
+2025-07-01 15:50:57,163 - INFO - Loaded 5 rows and 39 columns
+2025-07-01 15:50:57,164 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 15:50:57,164 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 15:50:57,164 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 15:50:57,165 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 15:50:57,165 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 15:50:57,165 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 15:50:57,166 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 15:50:57,166 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 15:50:57,166 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 15:50:57,166 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 15:50:57,167 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 15:50:57,167 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,167 - INFO - Converted ci_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,168 - INFO - Converted qc_schedule_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,168 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 15:50:57,169 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 15:50:57,169 - INFO - Converted stock_pickup_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,169 - INFO - Converted shipment_creation_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,170 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,170 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 15:50:57,171 - INFO - Converted bi_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,171 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,171 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,172 - INFO - Converted item_receipt_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,172 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,173 - INFO - Converted actual_shipping_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,173 - INFO - Converted actual_arrival_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,173 - INFO - Converted actual_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 15:50:57,173 - INFO - All required columns present
+2025-07-01 15:50:57,173 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 15:50:57,607 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 15:50:57,607 - INFO - TAT Calculator initialized successfully
+2025-07-01 15:50:57,607 - INFO - Setup completed successfully!
+2025-07-01 15:50:57,608 - INFO - Processing sample of 5 POs
+2025-07-01 15:50:57,608 - INFO - Using integrated delay calculation...
+2025-07-01 15:50:57,616 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 15:50:57,616 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,616 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,616 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,616 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,619 - ERROR - Error processing row 0: unterminated string literal (detected at line 1) (<unknown>, line 1)
+2025-07-01 15:50:57,620 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,623 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 15:50:57,623 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,623 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,623 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,623 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,623 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,623 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,623 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,623 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,623 - ERROR - Error processing row 1: unterminated string literal (detected at line 1) (<unknown>, line 1)
+2025-07-01 15:50:57,627 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 15:50:57,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,627 - ERROR - Error processing row 2: unterminated string literal (detected at line 1) (<unknown>, line 1)
+2025-07-01 15:50:57,631 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 15:50:57,631 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,631 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,632 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,632 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,632 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,632 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,632 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,632 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,632 - ERROR - Error processing row 3: unterminated string literal (detected at line 1) (<unknown>, line 1)
+2025-07-01 15:50:57,636 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 15:50:57,636 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,636 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,636 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,636 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 15:50:57,638 - ERROR - Error processing row 4: unterminated string literal (detected at line 1) (<unknown>, line 1)
+2025-07-01 15:50:57,638 - INFO - Completed calculations with integrated delays: 5 TAT results, 0 delay analyses
+2025-07-01 15:50:57,639 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_155057.json
+2025-07-01 15:50:57,639 - WARNING - No detailed delay results to save
+2025-07-01 15:50:57,643 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_155057.csv
+2025-07-01 15:50:57,669 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_155057.xlsx
+2025-07-01 15:50:57,688 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_155057.xlsx
+2025-07-01 15:50:57,688 - INFO -   - actual_timestamps tab: 0 POs x 31 stages
+2025-07-01 15:50:57,688 - INFO -   - timestamps tab: 0 POs x 31 stages
+2025-07-01 15:50:57,688 - INFO -   - delay_days tab: 0 POs x 31 stages
+2025-07-01 15:50:57,688 - WARNING - No detailed delay results to export

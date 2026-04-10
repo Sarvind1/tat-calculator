@@ -28,7 +28,6 @@ class ProcessFlow(BaseModel):
     """Process flow metadata for a stage"""
     critical_path: bool
     parallel_processes: List[str] = Field(default_factory=list)
-    handoff_points: List[str] = Field(default_factory=list)
     process_type: str
     team_owner: str
 
@@ -525,9 +524,7 @@ class TATCalculator:
                 "process_flow": {
                     "team_owner": stage_config.process_flow.team_owner,
                     "process_type": stage_config.process_flow.process_type,
-                    "critical_path": stage_config.process_flow.critical_path,
-                    "handoff_points": stage_config.process_flow.handoff_points
-                },
+                    "critical_path": stage_config.process_flow.critical_path                },
                 "dependencies": calc_details.get("dependencies", []) if isinstance(calc_details, dict) else []
             }
             
