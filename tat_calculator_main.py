@@ -48,7 +48,7 @@ class TATCalculator:
         self.stage_calculator = StageCalculator(self.config, self.expression_evaluator)
         self.tat_processor = TATProcessor(self.config, self.stage_calculator)
         
-        logger.info(f"TAT Calculator initialized with {len(self.config.stages)} stages")
+        # logger.info(f"TAT Calculator initialized with {len(self.config.stages)} stages")
     
     def calculate_tat(self, po_row: pd.Series) -> Dict[str, Any]:
         """

@@ -1327,3 +1327,1198 @@
 2025-07-01 16:48:05,127 - INFO -   - timestamps tab: 5 POs x 31 stages
 2025-07-01 16:48:05,127 - INFO -   - delay_days tab: 5 POs x 31 stages
 2025-07-01 16:48:05,164 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_164805.xlsx
+2025-07-01 17:40:22,352 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 17:40:22,352 - INFO - Setting up TAT calculation environment...
+2025-07-01 17:40:22,352 - INFO - Loading Excel file: ts_big.xlsx
+2025-07-01 17:40:23,170 - INFO - Loaded 5 rows and 39 columns
+2025-07-01 17:40:23,172 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 17:40:23,172 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 17:40:23,173 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 17:40:23,173 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:40:23,173 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:40:23,174 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 17:40:23,174 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:40:23,174 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:40:23,175 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:40:23,175 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:40:23,175 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:40:23,176 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,176 - INFO - Converted ci_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,176 - INFO - Converted qc_schedule_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,177 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:40:23,177 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:40:23,177 - INFO - Converted stock_pickup_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,177 - INFO - Converted shipment_creation_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,178 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,178 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:40:23,178 - INFO - Converted bi_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,179 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,179 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,179 - INFO - Converted item_receipt_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,179 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,180 - INFO - Converted actual_shipping_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,180 - INFO - Converted actual_arrival_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,180 - INFO - Converted actual_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:40:23,180 - INFO - All required columns present
+2025-07-01 17:40:23,180 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 17:40:23,639 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 17:40:23,639 - INFO - TAT Calculator initialized successfully
+2025-07-01 17:40:23,639 - INFO - Setup completed successfully!
+2025-07-01 17:40:23,640 - INFO - Processing sample of 5 POs
+2025-07-01 17:40:23,640 - INFO - Using integrated delay calculation...
+2025-07-01 17:40:23,649 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:40:23,649 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,649 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,649 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,649 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,654 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 17:40:23,655 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,658 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:40:23,658 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,658 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,658 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,658 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,658 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,658 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,658 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,659 - INFO - Processed PO: PO373323PXIN-0001031
+2025-07-01 17:40:23,662 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:40:23,662 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,662 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,662 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,662 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,663 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,664 - INFO - Processed PO: PO373366ROOM-0337551
+2025-07-01 17:40:23,666 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:40:23,666 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,667 - INFO - Processed PO: PO373771AMAZ-0002481
+2025-07-01 17:40:23,670 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:40:23,670 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,670 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,670 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,670 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:40:23,674 - INFO - Processed PO: PO373857M2B3-10030650
+2025-07-01 17:40:23,676 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:40:23,676 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:40:23,676 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:40:23,676 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:40:23,676 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:40:23,676 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:40:23,676 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:40:23,676 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:40:23,680 - WARNING - No valid target timestamp found in stage result: 03. PI Upload Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:40:23,681 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:40:23,682 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:40:23,683 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:40:23,683 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:40:23,683 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:40:23,683 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:40:23,683 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:40:23,684 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:40:23,686 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:40:23,688 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:40:23,688 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:40:23,688 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:40:23,688 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:40:23,688 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:40:23,688 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:40:23,688 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:40:23,688 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:40:23,691 - INFO - Completed calculations with integrated delays: 5 TAT results, 5 delay analyses
+2025-07-01 17:40:23,695 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_174023.json
+2025-07-01 17:40:23,697 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_174023.json
+2025-07-01 17:40:23,704 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_174023.csv
+2025-07-01 17:40:23,798 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_174023.xlsx
+2025-07-01 17:40:23,840 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_174023.xlsx
+2025-07-01 17:40:23,840 - INFO -   - actual_timestamps tab: 5 POs x 31 stages
+2025-07-01 17:40:23,840 - INFO -   - timestamps tab: 5 POs x 31 stages
+2025-07-01 17:40:23,840 - INFO -   - delay_days tab: 5 POs x 31 stages
+2025-07-01 17:40:23,867 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_174023.xlsx
+2025-07-01 17:45:03,284 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 17:45:03,284 - INFO - Setting up TAT calculation environment...
+2025-07-01 17:45:03,284 - INFO - Loading Excel file: ts_small_1.xlsx
+2025-07-01 17:45:03,403 - INFO - Loaded 1 rows and 75 columns
+2025-07-01 17:45:03,405 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:45:03,405 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:45:03,405 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:45:03,406 - INFO - Converted pi_invoice_approval_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,406 - INFO - Converted pi_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,406 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:45:03,407 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:45:03,407 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:45:03,407 - INFO - Converted po_sm_date_value: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,408 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:45:03,408 - INFO - Converted sm_signoff_ts: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,408 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,409 - INFO - Converted ci_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,409 - INFO - Converted qc_schedule_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,409 - INFO - Converted ffw_booking_ts: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,410 - INFO - Converted spd_ts: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,410 - INFO - Converted stock_pickup_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,410 - INFO - Converted shipment_creation_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,411 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,411 - INFO - Converted bi_invoice_approval_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,411 - INFO - Converted bi_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,412 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,412 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,412 - INFO - Converted item_receipt_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,412 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,413 - INFO - Converted actual_shipping_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,413 - INFO - Converted actual_arrival_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,413 - INFO - Converted actual_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:45:03,413 - INFO - All required columns present
+2025-07-01 17:45:03,413 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 17:45:03,493 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 17:45:03,493 - INFO - TAT Calculator initialized successfully
+2025-07-01 17:45:03,493 - INFO - Setup completed successfully!
+2025-07-01 17:45:03,493 - INFO - Processing sample of 5 POs
+2025-07-01 17:45:03,494 - INFO - Using integrated delay calculation...
+2025-07-01 17:45:03,502 - INFO - Processed PO: PO374147PROB-0001921
+2025-07-01 17:45:03,504 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:45:03,504 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:45:03,506 - INFO - Completed calculations with integrated delays: 1 TAT results, 1 delay analyses
+2025-07-01 17:45:03,507 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_174503.json
+2025-07-01 17:45:03,508 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_174503.json
+2025-07-01 17:45:03,510 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_174503.csv
+2025-07-01 17:45:03,546 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_174503.xlsx
+2025-07-01 17:45:03,571 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_174503.xlsx
+2025-07-01 17:45:03,571 - INFO -   - actual_timestamps tab: 1 POs x 31 stages
+2025-07-01 17:45:03,571 - INFO -   - timestamps tab: 1 POs x 31 stages
+2025-07-01 17:45:03,571 - INFO -   - delay_days tab: 1 POs x 31 stages
+2025-07-01 17:45:03,588 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_174503.xlsx
+2025-07-01 17:46:33,562 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 17:46:33,563 - INFO - Setting up TAT calculation environment...
+2025-07-01 17:46:33,563 - INFO - Loading Excel file: ts_small_1.xlsx
+2025-07-01 17:46:33,862 - INFO - Loaded 1 rows and 40 columns
+2025-07-01 17:46:33,864 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,864 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,864 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,865 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,865 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,865 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,865 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,866 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,866 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,866 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,867 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,867 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,868 - INFO - Converted ci_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,868 - INFO - Converted qc_schedule_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,868 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,869 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,869 - INFO - Converted stock_pickup_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,869 - INFO - Converted shipment_creation_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,870 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,870 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:46:33,870 - INFO - Converted bi_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,870 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,871 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,871 - INFO - Converted item_receipt_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,871 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,872 - INFO - Converted actual_shipping_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,872 - INFO - Converted actual_arrival_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,872 - INFO - Converted actual_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:46:33,872 - INFO - All required columns present
+2025-07-01 17:46:33,872 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 17:46:33,955 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 17:46:33,955 - INFO - TAT Calculator initialized successfully
+2025-07-01 17:46:33,955 - INFO - Setup completed successfully!
+2025-07-01 17:46:33,955 - INFO - Processing sample of 5 POs
+2025-07-01 17:46:33,955 - INFO - Using integrated delay calculation...
+2025-07-01 17:46:33,964 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 17:46:33,966 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:46:33,966 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:46:33,968 - INFO - Completed calculations with integrated delays: 1 TAT results, 1 delay analyses
+2025-07-01 17:46:33,969 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_174633.json
+2025-07-01 17:46:33,970 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_174633.json
+2025-07-01 17:46:33,972 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_174633.csv
+2025-07-01 17:46:34,008 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_174633.xlsx
+2025-07-01 17:46:34,032 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_174634.xlsx
+2025-07-01 17:46:34,032 - INFO -   - actual_timestamps tab: 1 POs x 31 stages
+2025-07-01 17:46:34,032 - INFO -   - timestamps tab: 1 POs x 31 stages
+2025-07-01 17:46:34,032 - INFO -   - delay_days tab: 1 POs x 31 stages
+2025-07-01 17:46:34,051 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_174634.xlsx
+2025-07-01 17:47:03,841 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 17:47:03,841 - INFO - Setting up TAT calculation environment...
+2025-07-01 17:47:03,841 - INFO - Loading Excel file: ts_small_1.xlsx
+2025-07-01 17:47:03,954 - INFO - Loaded 1 rows and 40 columns
+2025-07-01 17:47:03,956 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,956 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,956 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,957 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,957 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,957 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,958 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,958 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,958 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,958 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,959 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,959 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,959 - INFO - Converted ci_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,960 - INFO - Converted qc_schedule_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,960 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,960 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,961 - INFO - Converted stock_pickup_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,961 - INFO - Converted shipment_creation_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,961 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,962 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:47:03,962 - INFO - Converted bi_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,962 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,962 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,963 - INFO - Converted item_receipt_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,963 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,963 - INFO - Converted actual_shipping_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,964 - INFO - Converted actual_arrival_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,964 - INFO - Converted actual_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:47:03,964 - INFO - All required columns present
+2025-07-01 17:47:03,964 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 17:47:04,040 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 17:47:04,040 - INFO - TAT Calculator initialized successfully
+2025-07-01 17:47:04,040 - INFO - Setup completed successfully!
+2025-07-01 17:47:04,040 - INFO - Processing sample of 5 POs
+2025-07-01 17:47:04,040 - INFO - Using integrated delay calculation...
+2025-07-01 17:47:04,048 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 17:47:04,050 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:47:04,050 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:47:04,052 - INFO - Completed calculations with integrated delays: 1 TAT results, 1 delay analyses
+2025-07-01 17:47:04,053 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_174704.json
+2025-07-01 17:47:04,054 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_174704.json
+2025-07-01 17:47:04,056 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_174704.csv
+2025-07-01 17:47:04,094 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_174704.xlsx
+2025-07-01 17:47:04,112 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_174704.xlsx
+2025-07-01 17:47:04,112 - INFO -   - actual_timestamps tab: 1 POs x 31 stages
+2025-07-01 17:47:04,112 - INFO -   - timestamps tab: 1 POs x 31 stages
+2025-07-01 17:47:04,112 - INFO -   - delay_days tab: 1 POs x 31 stages
+2025-07-01 17:47:04,127 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_174704.xlsx
+2025-07-01 17:48:58,065 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 17:48:58,065 - INFO - Setting up TAT calculation environment...
+2025-07-01 17:48:58,065 - INFO - Loading Excel file: ts_big.xlsx
+2025-07-01 17:48:59,367 - INFO - Loaded 5 rows and 39 columns
+2025-07-01 17:48:59,368 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 17:48:59,368 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 17:48:59,369 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 17:48:59,369 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:48:59,369 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:48:59,370 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 17:48:59,370 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:48:59,370 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:48:59,370 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:48:59,371 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:48:59,371 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:48:59,371 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,372 - INFO - Converted ci_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,372 - INFO - Converted qc_schedule_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,372 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:48:59,373 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:48:59,373 - INFO - Converted stock_pickup_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,374 - INFO - Converted shipment_creation_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,374 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,374 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:48:59,375 - INFO - Converted bi_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,375 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,375 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,375 - INFO - Converted item_receipt_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,376 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,376 - INFO - Converted actual_shipping_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,376 - INFO - Converted actual_arrival_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,377 - INFO - Converted actual_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:48:59,377 - INFO - All required columns present
+2025-07-01 17:48:59,377 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 17:48:59,820 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 17:48:59,820 - INFO - TAT Calculator initialized successfully
+2025-07-01 17:48:59,820 - INFO - Setup completed successfully!
+2025-07-01 17:48:59,820 - INFO - Processing sample of 5 POs
+2025-07-01 17:48:59,820 - INFO - Using integrated delay calculation...
+2025-07-01 17:48:59,827 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:48:59,827 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,827 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,827 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,827 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,834 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 17:48:59,835 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,837 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:48:59,837 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,837 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,837 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,837 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,838 - INFO - Processed PO: PO373323PXIN-0001031
+2025-07-01 17:48:59,841 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:48:59,841 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,841 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,841 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,841 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,841 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,842 - INFO - Processed PO: PO373366ROOM-0337551
+2025-07-01 17:48:59,846 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:48:59,846 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,846 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,846 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,846 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,847 - INFO - Processed PO: PO373771AMAZ-0002481
+2025-07-01 17:48:59,850 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:48:59,850 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,850 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,850 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,850 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:48:59,854 - INFO - Processed PO: PO373857M2B3-10030650
+2025-07-01 17:48:59,856 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:48:59,856 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:48:59,856 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:48:59,856 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:48:59,856 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:48:59,856 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:48:59,856 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:48:59,856 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:48:59,860 - WARNING - No valid target timestamp found in stage result: 03. PI Upload Pending
+2025-07-01 17:48:59,861 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:48:59,862 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:48:59,864 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:48:59,866 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:48:59,867 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:48:59,867 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:48:59,867 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:48:59,867 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:48:59,867 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:48:59,867 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:48:59,867 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:48:59,867 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:48:59,869 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:48:59,869 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:48:59,869 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:48:59,869 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:48:59,869 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:48:59,869 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:48:59,869 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:48:59,869 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:48:59,873 - INFO - Completed calculations with integrated delays: 5 TAT results, 5 delay analyses
+2025-07-01 17:48:59,878 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_174859.json
+2025-07-01 17:48:59,881 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_174859.json
+2025-07-01 17:48:59,888 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_174859.csv
+2025-07-01 17:48:59,976 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_174859.xlsx
+2025-07-01 17:49:00,033 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_174859.xlsx
+2025-07-01 17:49:00,033 - INFO -   - actual_timestamps tab: 5 POs x 31 stages
+2025-07-01 17:49:00,033 - INFO -   - timestamps tab: 5 POs x 31 stages
+2025-07-01 17:49:00,033 - INFO -   - delay_days tab: 5 POs x 31 stages
+2025-07-01 17:49:00,069 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_174900.xlsx
+2025-07-01 17:51:50,081 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 17:51:50,082 - INFO - Setting up TAT calculation environment...
+2025-07-01 17:51:50,082 - INFO - Loading Excel file: ts_big.xlsx
+2025-07-01 17:51:50,312 - INFO - Loaded 5 rows and 39 columns
+2025-07-01 17:51:50,314 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 17:51:50,315 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 17:51:50,315 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 17:51:50,315 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:51:50,316 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:51:50,316 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 17:51:50,316 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:51:50,316 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:51:50,317 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:51:50,317 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:51:50,317 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:51:50,318 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,318 - INFO - Converted ci_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,319 - INFO - Converted qc_schedule_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,319 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:51:50,319 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:51:50,320 - INFO - Converted stock_pickup_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,320 - INFO - Converted shipment_creation_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,320 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,320 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:51:50,321 - INFO - Converted bi_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,321 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,321 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,321 - INFO - Converted item_receipt_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,322 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,322 - INFO - Converted actual_shipping_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,322 - INFO - Converted actual_arrival_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,323 - INFO - Converted actual_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:51:50,323 - INFO - All required columns present
+2025-07-01 17:51:50,323 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 17:51:50,395 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 17:51:50,395 - INFO - TAT Calculator initialized successfully
+2025-07-01 17:51:50,395 - INFO - Setup completed successfully!
+2025-07-01 17:51:50,395 - INFO - Processing sample of 5 POs
+2025-07-01 17:51:50,395 - INFO - Using integrated delay calculation...
+2025-07-01 17:51:50,399 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:51:50,399 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,399 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,399 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,399 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,402 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 17:51:50,403 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,404 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,405 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,405 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,405 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,405 - INFO - Processed PO: PO373323PXIN-0001031
+2025-07-01 17:51:50,406 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:51:50,406 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,406 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,406 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,407 - INFO - Processed PO: PO373366ROOM-0337551
+2025-07-01 17:51:50,409 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:51:50,409 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,409 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,409 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,409 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,409 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,409 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,409 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,410 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,410 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,410 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,410 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,410 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,410 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,410 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,410 - INFO - Processed PO: PO373771AMAZ-0002481
+2025-07-01 17:51:50,412 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:51:50,412 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,412 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,412 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,412 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:51:50,414 - INFO - Processed PO: PO373857M2B3-10030650
+2025-07-01 17:51:50,416 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:51:50,416 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:51:50,416 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:51:50,416 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:51:50,416 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:51:50,416 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:51:50,416 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:51:50,416 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:51:50,419 - WARNING - No valid target timestamp found in stage result: 03. PI Upload Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:51:50,420 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:51:50,421 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:51:50,421 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:51:50,421 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:51:50,421 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:51:50,421 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:51:50,421 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:51:50,421 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:51:50,422 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:51:50,423 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:51:50,424 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:51:50,424 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:51:50,424 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:51:50,425 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:51:50,425 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:51:50,425 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:51:50,425 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:51:50,425 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:51:50,425 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:51:50,425 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:51:50,425 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:51:50,427 - INFO - Completed calculations with integrated delays: 5 TAT results, 5 delay analyses
+2025-07-01 17:51:50,431 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_175150.json
+2025-07-01 17:51:50,432 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_175150.json
+2025-07-01 17:51:50,434 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_175150.csv
+2025-07-01 17:51:50,502 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_175150.xlsx
+2025-07-01 17:51:50,530 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_175150.xlsx
+2025-07-01 17:51:50,530 - INFO -   - actual_timestamps tab: 5 POs x 31 stages
+2025-07-01 17:51:50,530 - INFO -   - timestamps tab: 5 POs x 31 stages
+2025-07-01 17:51:50,530 - INFO -   - delay_days tab: 5 POs x 31 stages
+2025-07-01 17:51:50,552 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_175150.xlsx
+2025-07-01 17:54:50,623 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 17:54:50,624 - INFO - Setting up TAT calculation environment...
+2025-07-01 17:54:50,624 - INFO - Loading Excel file: ts_small_1.xlsx
+2025-07-01 17:54:50,750 - INFO - Loaded 1 rows and 40 columns
+2025-07-01 17:54:50,752 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,752 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,752 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,752 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,753 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,753 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,753 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,754 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,754 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,754 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,754 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,755 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,755 - INFO - Converted ci_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,756 - INFO - Converted qc_schedule_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,756 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,757 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,757 - INFO - Converted stock_pickup_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,757 - INFO - Converted shipment_creation_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,757 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,758 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 17:54:50,758 - INFO - Converted bi_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,758 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,759 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,759 - INFO - Converted item_receipt_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,759 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,760 - INFO - Converted actual_shipping_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,760 - INFO - Converted actual_arrival_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,760 - INFO - Converted actual_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 17:54:50,760 - INFO - All required columns present
+2025-07-01 17:54:50,760 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 17:54:50,845 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 17:54:50,845 - INFO - TAT Calculator initialized successfully
+2025-07-01 17:54:50,846 - INFO - Setup completed successfully!
+2025-07-01 17:54:50,846 - INFO - Processing sample of 5 POs
+2025-07-01 17:54:50,846 - INFO - Using integrated delay calculation...
+2025-07-01 17:54:50,854 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 17:54:50,856 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:54:50,856 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:54:50,858 - INFO - Completed calculations with integrated delays: 1 TAT results, 1 delay analyses
+2025-07-01 17:54:50,859 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_175450.json
+2025-07-01 17:54:50,860 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_175450.json
+2025-07-01 17:54:50,862 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_175450.csv
+2025-07-01 17:54:50,898 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_175450.xlsx
+2025-07-01 17:54:50,923 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_175450.xlsx
+2025-07-01 17:54:50,923 - INFO -   - actual_timestamps tab: 1 POs x 31 stages
+2025-07-01 17:54:50,923 - INFO -   - timestamps tab: 1 POs x 31 stages
+2025-07-01 17:54:50,923 - INFO -   - delay_days tab: 1 POs x 31 stages
+2025-07-01 17:54:50,939 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_175450.xlsx
+2025-07-01 17:57:11,707 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 17:57:11,707 - INFO - Setting up TAT calculation environment...
+2025-07-01 17:57:11,707 - INFO - Loading Excel file: ts_big.xlsx
+2025-07-01 17:57:11,939 - INFO - Loaded 5 rows and 39 columns
+2025-07-01 17:57:11,941 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 17:57:11,941 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/5 missing (0.0%)
+2025-07-01 17:57:11,941 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 17:57:11,942 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:57:11,942 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:57:11,942 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 2/5 missing (40.0%)
+2025-07-01 17:57:11,943 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:57:11,943 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:57:11,943 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:57:11,943 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:57:11,944 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:57:11,944 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,945 - INFO - Converted ci_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,945 - INFO - Converted qc_schedule_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,946 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:57:11,946 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 3/5 missing (60.0%)
+2025-07-01 17:57:11,946 - INFO - Converted stock_pickup_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,946 - INFO - Converted shipment_creation_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,947 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,947 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 4/5 missing (80.0%)
+2025-07-01 17:57:11,947 - INFO - Converted bi_payment_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,948 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,948 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,948 - INFO - Converted item_receipt_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,948 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,949 - INFO - Converted actual_shipping_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,949 - INFO - Converted actual_arrival_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,949 - INFO - Converted actual_delivery_date: float64 -> datetime, 5/5 missing (100.0%)
+2025-07-01 17:57:11,949 - INFO - All required columns present
+2025-07-01 17:57:11,949 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 17:57:12,017 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 17:57:12,017 - INFO - TAT Calculator initialized successfully
+2025-07-01 17:57:12,017 - INFO - Setup completed successfully!
+2025-07-01 17:57:12,017 - INFO - Processing sample of 5 POs
+2025-07-01 17:57:12,017 - INFO - Using integrated delay calculation...
+2025-07-01 17:57:12,021 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:57:12,021 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,021 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,021 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,021 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,024 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 17:57:12,025 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,026 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,027 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,027 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,027 - INFO - Processed PO: PO373323PXIN-0001031
+2025-07-01 17:57:12,028 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:57:12,028 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,028 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,028 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,028 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,029 - INFO - Processed PO: PO373366ROOM-0337551
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,031 - INFO - Processed PO: PO373771AMAZ-0002481
+2025-07-01 17:57:12,033 - ERROR - Error evaluating expression 'max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)': cannot convert float NaN to integer
+2025-07-01 17:57:12,033 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,033 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,033 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,033 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 17:57:12,036 - INFO - Processed PO: PO373857M2B3-10030650
+2025-07-01 17:57:12,038 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:57:12,038 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:57:12,038 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:57:12,038 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:57:12,038 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:57:12,038 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:57:12,038 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:57:12,038 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:57:12,040 - WARNING - No valid target timestamp found in stage result: 03. PI Upload Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:57:12,041 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:57:12,043 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 18. FFW Booking Missing
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 19. Supplier Pickup Date Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 20. Pre Pickup Check
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 21. FOB Pickup Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 22. Non FOB Pickup Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 23. INB Creation Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 24. Mark In-Transit Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 25. BL Approval Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 26. BL Payment Pending - In Transit
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 27. BL Payment Pending - Arrived
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 28. Telex Release Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 29. Stock Delivery Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 30. Stock Receiving Pending
+2025-07-01 17:57:12,045 - WARNING - No valid target timestamp found in stage result: 31. Dispute - PO Closing Pending
+2025-07-01 17:57:12,046 - WARNING - No valid target timestamp found in stage result: 10. PRD Confirmation Pending
+2025-07-01 17:57:12,047 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 17:57:12,047 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 17:57:12,047 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 17:57:12,047 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 17:57:12,047 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 17:57:12,047 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 17:57:12,047 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 17:57:12,049 - INFO - Completed calculations with integrated delays: 5 TAT results, 5 delay analyses
+2025-07-01 17:57:12,052 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_175712.json
+2025-07-01 17:57:12,054 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_175712.json
+2025-07-01 17:57:12,055 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_175712.csv
+2025-07-01 17:57:12,123 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_175712.xlsx
+2025-07-01 17:57:12,152 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_175712.xlsx
+2025-07-01 17:57:12,152 - INFO -   - actual_timestamps tab: 5 POs x 31 stages
+2025-07-01 17:57:12,152 - INFO -   - timestamps tab: 5 POs x 31 stages
+2025-07-01 17:57:12,152 - INFO -   - delay_days tab: 5 POs x 31 stages
+2025-07-01 17:57:12,182 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_175712.xlsx
+2025-07-01 18:00:51,517 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 18:00:51,518 - INFO - Setting up TAT calculation environment...
+2025-07-01 18:00:51,518 - INFO - Loading Excel file: ts_small_1.xlsx
+2025-07-01 18:00:51,641 - INFO - Loaded 1 rows and 40 columns
+2025-07-01 18:00:51,643 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,644 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,644 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,644 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,645 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,645 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,645 - INFO - Converted prd_reconfirmed_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,646 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,646 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,646 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,646 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,647 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,648 - INFO - Converted ci_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,648 - INFO - Converted qc_schedule_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,648 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,648 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,649 - INFO - Converted stock_pickup_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,649 - INFO - Converted shipment_creation_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,649 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,650 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:00:51,650 - INFO - Converted bi_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,650 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,650 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,651 - INFO - Converted item_receipt_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,651 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,651 - INFO - Converted actual_shipping_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,652 - INFO - Converted actual_arrival_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,652 - INFO - Converted actual_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:00:51,652 - INFO - All required columns present
+2025-07-01 18:00:51,652 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 18:00:51,735 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 18:00:51,735 - INFO - TAT Calculator initialized successfully
+2025-07-01 18:00:51,735 - INFO - Setup completed successfully!
+2025-07-01 18:00:51,735 - INFO - Processing sample of 5 POs
+2025-07-01 18:00:51,735 - INFO - Using integrated delay calculation...
+2025-07-01 18:00:51,744 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 18:00:51,746 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 18:00:51,746 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 18:00:51,749 - INFO - Completed calculations with integrated delays: 1 TAT results, 1 delay analyses
+2025-07-01 18:00:51,750 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_180051.json
+2025-07-01 18:00:51,750 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_180051.json
+2025-07-01 18:00:51,752 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_180051.csv
+2025-07-01 18:00:51,789 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_180051.xlsx
+2025-07-01 18:00:51,811 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_180051.xlsx
+2025-07-01 18:00:51,811 - INFO -   - actual_timestamps tab: 1 POs x 31 stages
+2025-07-01 18:00:51,811 - INFO -   - timestamps tab: 1 POs x 31 stages
+2025-07-01 18:00:51,811 - INFO -   - delay_days tab: 1 POs x 31 stages
+2025-07-01 18:00:51,824 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_180051.xlsx
+2025-07-01 18:02:31,885 - INFO - Output folders created: ['outputs/tat_results', 'outputs/delay_results', 'outputs/excel_exports', 'outputs/csv_files', 'outputs/logs']
+2025-07-01 18:02:31,885 - INFO - Setting up TAT calculation environment...
+2025-07-01 18:02:31,885 - INFO - Loading Excel file: ts_small_1.xlsx
+2025-07-01 18:02:32,892 - INFO - Loaded 1 rows and 40 columns
+2025-07-01 18:02:32,894 - INFO - Converted po_created_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,895 - INFO - Converted po_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,896 - INFO - Converted supplier_confirmation_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,896 - INFO - Converted pi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,897 - INFO - Converted pi_payment_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,897 - INFO - Converted receive_first_prd_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,898 - INFO - Converted prd_reconfirmed_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,899 - INFO - Converted po_im_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,899 - INFO - Converted po_sm_date_value: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,900 - INFO - Converted batch_created_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,901 - INFO - Converted sm_signoff_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,901 - INFO - Converted ci_invoice_approval_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,902 - INFO - Converted ci_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,902 - INFO - Converted qc_schedule_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,903 - INFO - Converted ffw_booking_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,903 - INFO - Converted spd_ts: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,904 - INFO - Converted stock_pickup_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,905 - INFO - Converted shipment_creation_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,905 - INFO - Converted shipment_in_transit_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,906 - INFO - Converted bi_invoice_approval_date: datetime64[ns] -> datetime, 0/1 missing (0.0%)
+2025-07-01 18:02:32,906 - INFO - Converted bi_payment_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,907 - INFO - Converted ffwp_telex_release_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,907 - INFO - Converted shipment_stock_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,908 - INFO - Converted item_receipt_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,908 - INFO - Converted actual_cargo_pick_up_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,909 - INFO - Converted actual_shipping_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,909 - INFO - Converted actual_arrival_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,910 - INFO - Converted actual_delivery_date: float64 -> datetime, 1/1 missing (100.0%)
+2025-07-01 18:02:32,910 - INFO - All required columns present
+2025-07-01 18:02:32,910 - INFO - Initializing TAT Calculator with config: stages_config.json
+2025-07-01 18:02:33,372 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 18:02:33,372 - INFO - TAT Calculator initialized successfully
+2025-07-01 18:02:33,372 - INFO - Setup completed successfully!
+2025-07-01 18:02:33,372 - INFO - Processing sample of 5 POs
+2025-07-01 18:02:33,372 - INFO - Using integrated delay calculation...
+2025-07-01 18:02:33,376 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 18:02:33,376 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 18:02:33,376 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 18:02:33,377 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 18:02:33,380 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 18:02:33,382 - WARNING - No valid target timestamp found in stage result: 11. IM Sign-Off Pending
+2025-07-01 18:02:33,382 - WARNING - No valid target timestamp found in stage result: 12. Ready for Batching Pending
+2025-07-01 18:02:33,382 - WARNING - No valid target timestamp found in stage result: 13. Batch Creation Pending
+2025-07-01 18:02:33,382 - WARNING - No valid target timestamp found in stage result: 14. SM Sign-Off Pending
+2025-07-01 18:02:33,382 - WARNING - No valid target timestamp found in stage result: 15. CI Approval Pending
+2025-07-01 18:02:33,382 - WARNING - No valid target timestamp found in stage result: 16. CI Payment Pending
+2025-07-01 18:02:33,382 - WARNING - No valid target timestamp found in stage result: 17. QC Schedule Pending
+2025-07-01 18:02:33,385 - INFO - Completed calculations with integrated delays: 1 TAT results, 1 delay analyses
+2025-07-01 18:02:33,386 - INFO - TAT results with delays saved to: outputs/tat_results/tat_results_with_delays_20250701_180233.json
+2025-07-01 18:02:33,387 - INFO - Detailed delay results saved to: outputs/delay_results/detailed_delay_analysis_20250701_180233.json
+2025-07-01 18:02:33,391 - INFO - Processed CSV saved to: outputs/csv_files/processed_data_20250701_180233.csv
+2025-07-01 18:02:33,437 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_180233.xlsx
+2025-07-01 18:02:33,465 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_180233.xlsx
+2025-07-01 18:02:33,465 - INFO -   - actual_timestamps tab: 1 POs x 31 stages
+2025-07-01 18:02:33,465 - INFO -   - timestamps tab: 1 POs x 31 stages
+2025-07-01 18:02:33,465 - INFO -   - delay_days tab: 1 POs x 31 stages
+2025-07-01 18:02:33,482 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_180233.xlsx
+2025-07-01 19:39:52,888 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 19:39:52,910 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:39:52,910 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:39:52,910 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:39:52,910 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:39:52,927 - INFO - Processed PO: PO373283MOUN-0000071
+2025-07-01 19:39:52,980 - INFO - Results exported to: outputs/excel_exports/tat_export_with_delays_20250701_193952.xlsx
+2025-07-01 19:39:53,003 - INFO - Stage-level results exported to: outputs/excel_exports/stage_level_analysis_20250701_193952.xlsx
+2025-07-01 19:39:53,003 - INFO -   - actual_timestamps tab: 1 POs x 31 stages
+2025-07-01 19:39:53,003 - INFO -   - timestamps tab: 1 POs x 31 stages
+2025-07-01 19:39:53,003 - INFO -   - delay_days tab: 1 POs x 31 stages
+2025-07-01 19:39:53,019 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_193953.xlsx
+2025-07-01 19:41:33,986 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 19:41:33,992 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:41:33,992 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:41:33,992 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:41:33,992 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:41:34,072 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_194134.xlsx
+2025-07-01 19:41:46,690 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 19:41:46,695 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:41:46,695 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:41:46,695 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:41:46,695 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:41:46,772 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_194146.xlsx
+2025-07-01 19:47:36,438 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 19:47:36,443 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:47:36,443 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:47:36,443 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:47:36,443 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:47:36,518 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_194736.xlsx
+2025-07-01 19:48:55,992 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 19:48:55,995 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:48:55,995 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:48:55,995 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:48:55,995 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:48:56,067 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_194856.xlsx
+2025-07-01 19:49:25,295 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 19:49:25,298 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:49:25,298 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:49:25,298 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:49:25,298 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:49:25,373 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_194925.xlsx
+2025-07-01 19:49:59,624 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 19:49:59,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:49:59,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:49:59,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:49:59,627 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 19:49:59,703 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_194959.xlsx
+2025-07-01 20:06:21,764 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:06:21,767 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:06:21,767 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:06:21,767 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:06:21,767 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:06:21,890 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_200621.xlsx
+2025-07-01 20:09:58,648 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:09:58,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:09:58,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:09:58,659 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:09:58,660 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:09:58,765 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_200958.xlsx
+2025-07-01 20:10:29,786 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:11:35,445 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:12:05,496 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:12:49,838 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:12:49,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:12:49,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:12:49,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:12:49,842 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:12:49,916 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_201249.xlsx
+2025-07-01 20:13:53,504 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:15:00,224 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:15:00,230 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:15:00,230 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:15:00,230 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:15:00,230 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:15:00,308 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_201500.xlsx
+2025-07-01 20:15:34,432 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:15:34,438 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:15:34,438 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:15:34,438 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:15:34,438 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:15:34,518 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_201534.xlsx
+2025-07-01 20:16:37,113 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:16:37,116 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:16:37,116 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:16:37,116 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:16:37,116 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:16:37,191 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_201637.xlsx
+2025-07-01 20:19:34,128 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:19:34,134 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:19:34,134 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:19:34,134 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:19:34,135 - ERROR - Error evaluating expression '': invalid syntax (<unknown>, line 0)
+2025-07-01 20:19:34,213 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_201934.xlsx
+2025-07-01 20:24:11,669 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:24:11,826 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_202411.xlsx
+2025-07-01 20:25:26,455 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:25:26,536 - INFO - Delay report exported to: outputs/excel_exports/detailed_delay_report_20250701_202526.xlsx
+2025-07-01 20:26:33,310 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:27:11,168 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:27:30,905 - INFO - TAT Calculator initialized with 31 stages
+2025-07-01 20:27:39,676 - INFO - TAT Calculator initialized with 31 stages

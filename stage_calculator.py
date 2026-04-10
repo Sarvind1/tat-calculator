@@ -2,202 +2,202 @@
 Stage Calculator Module
 =======================
 
-Core calculation logic for individual stages with simplified method-based approach.
-Methods: Projected, Actual, Adjusted
+Core calculation logic for individual stages with memoization.
+This module maintains the exact calculation logic from the original tat_calculator.py
 """
 
 import ast
+import logging
 from datetime import datetime, timedelta
-from typing import Dict, Optional, Tuple, Any, List
+from typing import Dict, Optional, Tuple, Any
 import pandas as pd
 from models_config import StageConfig, StagesConfig
 from expression_evaluator import ExpressionEvaluator
 
+logger = logging.getLogger(__name__)
+
 
 class StageCalculator:
     """
-    Calculates timestamps for individual stages using simplified logic:
+    Calculates adjusted timestamps for individual stages using the ORIGINAL priority logic:
     
-    - Method: Projected/Actual/Adjusted
-    - Target Timestamp: Based on preceding final_timestamp + lead_time
-    - Actual Timestamp: From actual_field or preceding actual
-    - Final Timestamp: Target (if Projected) or Actual (if Actual/Adjusted)
-    - Delay: Target - Actual (only for Actual/Adjusted)
+    1. Precedence-based calculation (from dependencies + lead time)
+    2. Actual timestamp comparison (if available)
+    3. Fallback calculation (when no precedence available)
+    
+    This maintains the exact logic from the original tat_calculator.py
     """
     
     def __init__(self, config: StagesConfig, expression_evaluator: ExpressionEvaluator):
         self.config = config
         self.expression_evaluator = expression_evaluator
         self.calculated_adjustments: Dict[str, Tuple[Optional[datetime], Dict[str, Any]]] = {}
+        # Link the evaluator to our cache
         self.expression_evaluator.set_calculated_adjustments(self.calculated_adjustments)
     
     def calculate_adjusted_timestamp(self, stage_id: str, po_row: pd.Series) -> Tuple[Optional[datetime], Dict[str, Any]]:
-        print(f"\n--- Calculating stage: {stage_id} ---")
+        """
+        Calculate adjusted timestamp for a specific stage using the ORIGINAL priority logic:
         
+        1. Precedence-based calculation (from dependencies + lead time)
+        2. Actual timestamp comparison (if available)
+        3. Fallback calculation (when no precedence available)
+        
+        Args:
+            stage_id: ID of the stage to calculate
+            po_row: PO data row
+            
+        Returns:
+            Tuple of (calculated_timestamp, calculation_details)
+        """
+        # Check if already calculated (memoization)
         if stage_id in self.calculated_adjustments:
-            print(f"Using cached result for stage: {stage_id}")
             return self.calculated_adjustments[stage_id]
         
         if stage_id not in self.config.stages:
-            print(f"ERROR: Stage {stage_id} not found in config.")
+            logger.error(f"Stage {stage_id} not found in configuration")
             return None, {"method": "error", "reason": f"Stage {stage_id} not found"}
         
         stage = self.config.stages[stage_id]
-        print(f"Stage config loaded for {stage_id}: {stage.name}")
         
-        # Evaluate lead_time dynamically from expression
-        print(f"Evaluating lead_time expression: {stage.lead_time}")
-        lead_time_days, lead_time_debug = self.expression_evaluator.evaluate_expression(str(stage.lead_time), po_row)
-        print(f"Lead time evaluated to: {lead_time_days} (Debug: {lead_time_debug})")
-        if not isinstance(lead_time_days, (int, float)):
-            print(f"Lead time is not a number, defaulting to 0")
-            lead_time_days = 0
-
+        # Initialize calculation details
         calc_details = {
             "method": None,
-            "target_timestamp": None,
-            "actual_timestamp": None,
-            "final_timestamp": None,
-            "delay": None,
-            "lead_time_applied": lead_time_days,
+            "source": None,
+            "target_date": None,
+            "lead_time_applied": stage.lead_time,
+            "decision_reason": None,
             "dependencies": [],
-            "actual_field": stage.actual_timestamp,
-            "precedence_method": None,
-            "calculation_source": None
+            "actual_field": None,
+            "actual_value": None,
+            "precedence_value": None,
+            "final_choice": None
         }
         
-        preceding_final_timestamps = []
-        preceding_actual_timestamps = []
-        has_projected_precedence = False
-        preceding_stage_ids = []
-        
+        # 1. Calculate precedence-based timestamp (ORIGINAL LOGIC)
+        precedence_timestamp = None
         if stage.preceding_stage:
-            try:
-                print(f"Evaluating preceding stage expression for {stage_id}: {stage.preceding_stage}")
-                result = self.expression_evaluator._eval_node(
-                    ast.parse(stage.preceding_stage, mode='eval').body, po_row
-                )
-                preceding_stage_ids = result if isinstance(result, list) else []
-                print(f"Preceding stage IDs: {preceding_stage_ids}")
-            except Exception as e:
-                print(f"ERROR evaluating preceding stage for {stage_id}: {e}")
-        
+            dependencies = []
+            preceding_timestamps = []
+            
+            # Just evaluate the string expression - it always returns a list
+            result = self.expression_evaluator._eval_node(
+                ast.parse(stage.preceding_stage, mode='eval').body, po_row
+            )
+            preceding_stage_ids = result if isinstance(result, list) else []
+            
+            # Process the stage IDs
             for prec_stage_id in preceding_stage_ids:
                 prec_stage_id = str(prec_stage_id)
                 if prec_stage_id in self.config.stages:
-                    print(f"Calculating preceding stage {prec_stage_id}")
                     prec_timestamp, prec_details = self.calculate_adjusted_timestamp(prec_stage_id, po_row)
-                    
                     if prec_timestamp:
-                        preceding_final_timestamps.append(prec_timestamp)
-                        print(f"Preceding final timestamp for {prec_stage_id}: {prec_timestamp}")
-                    
-                    if prec_details.get("actual_timestamp"):
-                        try:
-                            actual_ts = datetime.fromisoformat(prec_details["actual_timestamp"])
-                            preceding_actual_timestamps.append(actual_ts)
-                            print(f"Preceding actual timestamp for {prec_stage_id}: {actual_ts}")
-                        except Exception as e:
-                            print(f"Invalid actual timestamp in stage {prec_stage_id}: {e}")
-                    
-                    if prec_details.get("method") == "Projected" or prec_details.get("precedence_method") == "Projected":
-                        has_projected_precedence = True
-                    
-                    calc_details["dependencies"].append({
-                        "stage_id": prec_stage_id,
-                        "stage_name": self.config.stages[prec_stage_id].name,
-                        "timestamp": prec_timestamp.isoformat() if prec_timestamp else None,
-                        "method": prec_details.get("method", "unknown")
-                    })
+                        preceding_timestamps.append(prec_timestamp)
+                        dependencies.append({
+                            "stage_id": prec_stage_id,
+                            "stage_name": self.config.stages[prec_stage_id].name,
+                            "timestamp": prec_timestamp.isoformat(),
+                            "method": prec_details["method"] if isinstance(prec_details, dict) else "legacy"
+                        })
+            
+            calc_details["dependencies"] = dependencies
+            if preceding_timestamps:
+                base_timestamp = max(preceding_timestamps)
+                precedence_timestamp = base_timestamp  # WITHOUT lead time here (original logic)
+                calc_details["precedence_value"] = precedence_timestamp.isoformat()
+                calc_details["target_date"] = (base_timestamp + timedelta(days=stage.lead_time)).isoformat()
         
-        # Calculate target timestamp
-        if preceding_final_timestamps:
-            base_timestamp = max(preceding_final_timestamps)
-            print(f"Max preceding final timestamp: {base_timestamp}")
-            calc_details["target_timestamp"] = (base_timestamp + timedelta(days=lead_time_days)).isoformat()
-            calc_details["calculation_source"] = "precedence_based"
-            print(f"Target timestamp (precedence based): {calc_details['target_timestamp']}")
-        else:
-            print("No valid preceding timestamps, evaluating fallback expression")
-            try:
-                fallback_result, fallback_debug = self.expression_evaluator.evaluate_expression(
-                    stage.fallback_calculation.expression, po_row
-                )
-                print(f"Fallback expression evaluated to: {fallback_result} (Debug: {fallback_debug})")
-                if fallback_result:
-                    calc_details["target_timestamp"] = (fallback_result + timedelta(days=lead_time_days)).isoformat()
-                    calc_details["calculation_source"] = "fallback_based"
-                    print(f"Target timestamp (fallback): {calc_details['target_timestamp']}")
-            except Exception as e:
-                print(f"ERROR in fallback evaluation for {stage_id}: {e}")
+        # 2. ORIGINAL LOGIC: If no precedence, use fallback IMMEDIATELY
+        if not precedence_timestamp:
+            fallback_result, fallback_formula = self.expression_evaluator.evaluate_expression(
+                stage.fallback_calculation.expression, po_row
+            )
+            # print("Fallback", stage.name ,fallback_result, "end")
+            if fallback_result:
+                # print ("I have entered the fallback adding block",type(fallback_result),type(timedelta(days=stage.lead_time)))
+                final_timestamp = fallback_result + timedelta(days=stage.lead_time)
+                # print ("final_timestamp", final_timestamp)
+                calc_details["method"] = "fallback"
+                calc_details["source"] = stage.fallback_calculation.expression
+                calc_details["target_date"] = fallback_result.isoformat()
+                calc_details["decision_reason"] = "No precedence available, using fallback expression"
+                calc_details["final_choice"] = "fallback"
+                
+                # Cache result and return (ORIGINAL LOGIC)
+                result = (final_timestamp, calc_details)
+                self.calculated_adjustments[stage_id] = result
+            else:
+                calc_details["method"] = "failed"
+                calc_details["decision_reason"] = "No valid calculation method available"
+                # Cache and return failure
+                result = (None, calc_details)
+                self.calculated_adjustments[stage_id] = result
+                return result
         
-        # Determine precedence method
-        if preceding_stage_ids:
-            calc_details["precedence_method"] = "Projected" if has_projected_precedence else "Actual/Adjusted"
-        else:
-            calc_details["precedence_method"] = "no precedence"
-        
-        # Evaluate actual timestamp
-        current_actual_timestamp = None
+        # 3. Extract and get actual timestamp (ORIGINAL LOGIC)
+        actual_timestamp = None
+        actual_formula = None
         if stage.actual_timestamp:
-            print(f"Evaluating actual timestamp for {stage_id}: {stage.actual_timestamp}")
-            actual_result, actual_debug = self.expression_evaluator.evaluate_expression(
+            actual_timestamp, actual_formula = self.expression_evaluator.evaluate_expression(
                 stage.actual_timestamp, po_row
             )
-            print(f"Actual timestamp evaluated to: {actual_result} (Debug: {actual_debug})")
-            if actual_result:
-                current_actual_timestamp = actual_result
-                print(f"Actual timestamp: {current_actual_timestamp}")
+            calc_details["actual_field"] = stage.actual_timestamp
+            if actual_timestamp:
+                calc_details["actual_value"] = actual_timestamp.isoformat()
         
-        # Determine method and final timestamp
-        if current_actual_timestamp:
-            max_preceding_actual = max(preceding_actual_timestamps) if preceding_actual_timestamps else None
-            if max_preceding_actual and max_preceding_actual > current_actual_timestamp:
-                calc_details["method"] = "Adjusted"
-                calc_details["actual_timestamp"] = max_preceding_actual.isoformat()
-                calc_details["final_timestamp"] = max_preceding_actual.isoformat()
-                calc_details["calculation_source"] = "actual_from_precedence"
-                print("Method: Adjusted (preceding actual overrides current)")
+        # 4. Determine final timestamp and method (ORIGINAL LOGIC)
+        if precedence_timestamp and actual_timestamp:
+            if actual_timestamp >= precedence_timestamp:
+                final_timestamp = actual_timestamp
+                calc_details["method"] = "actual_over_precedence"
+                calc_details["source"] = actual_formula
+                calc_details["decision_reason"] = f"Actual date ({actual_timestamp.strftime('%Y-%m-%d')}) is later than precedence date ({precedence_timestamp.strftime('%Y-%m-%d')})"
+                calc_details["final_choice"] = "actual"
             else:
-                calc_details["method"] = "Actual"
-                calc_details["actual_timestamp"] = current_actual_timestamp.isoformat()
-                calc_details["final_timestamp"] = current_actual_timestamp.isoformat()
-                calc_details["calculation_source"] = "actual_from_field"
-                print("Method: Actual")
-        else:
-            calc_details["method"] = "Projected"
-            calc_details["final_timestamp"] = calc_details["target_timestamp"]
-            calc_details["calculation_source"] = (calc_details["calculation_source"] or "") + "_target"
-            if preceding_actual_timestamps:
-                calc_details["actual_timestamp"] = max(preceding_actual_timestamps).isoformat()
-            print("Method: Projected (no actuals available)")
+                final_timestamp = precedence_timestamp + timedelta(days=stage.lead_time)  # Apply lead time here (ORIGINAL)
+                calc_details["method"] = "precedence_over_actual"
+                calc_details["source"] = f"Calculated from dependencies"
+                calc_details["decision_reason"] = f"Precedence stage's timestamp ({precedence_timestamp.strftime('%Y-%m-%d')}) is later than actual ({actual_timestamp.strftime('%Y-%m-%d')})"
+                calc_details["final_choice"] = "precedence"
         
-        # Calculate delay if applicable
-        if calc_details["method"] in ["Actual", "Adjusted"] and calc_details["target_timestamp"] and calc_details["actual_timestamp"]:
-            try:
-                target_dt = datetime.fromisoformat(calc_details["target_timestamp"])
-                actual_dt = datetime.fromisoformat(calc_details["actual_timestamp"])
-                delay_days = (actual_dt - target_dt).days
-                calc_details["delay"] = delay_days
-                print(f"Delay: {delay_days} days")
-            except Exception as e:
-                print(f"ERROR calculating delay for {stage_id}: {e}")
+        elif actual_timestamp:
+            final_timestamp = actual_timestamp
+            calc_details["method"] = "actual_only"
+            calc_details["source"] = actual_formula
+            calc_details["decision_reason"] = "Using actual timestamp"
+            calc_details["final_choice"] = "actual"
         
-        # Final timestamp return
-        final_timestamp = None
-        if calc_details["final_timestamp"]:
-            try:
-                final_timestamp = datetime.fromisoformat(calc_details["final_timestamp"])
-                print(f"Final timestamp: {final_timestamp}")
-            except Exception as e:
-                print(f"ERROR parsing final timestamp for {stage_id}: {e}")
+        elif precedence_timestamp:
+            final_timestamp = precedence_timestamp + timedelta(days=stage.lead_time)
+            calc_details["method"] = "precedence_only"
+            calc_details["source"] = f"Calculated from dependencies + {stage.lead_time} days"
+            calc_details["decision_reason"] = "No actual timestamp available, using precedence calculation"
+            calc_details["final_choice"] = "precedence"
         
+        # Cache result
         result = (final_timestamp, calc_details)
         self.calculated_adjustments[stage_id] = result
-        print(f"--- Finished calculation for stage: {stage_id} ---\n")
+        
         return result
     
+    def extract_actual_field(self, expression: str) -> Optional[str]:
+        """
+        Extract the 'actual' field from a max() expression
+        
+        For expressions like "max(actual_field, fallback)", returns "actual_field"
+        """
+        try:
+            tree = ast.parse(expression, mode='eval')
+            if isinstance(tree.body, ast.Call) and isinstance(tree.body.func, ast.Name):
+                if tree.body.func.id == 'max' and tree.body.args:
+                    first_arg = tree.body.args[0]
+                    if isinstance(first_arg, ast.Name):
+                        return first_arg.id
+        except:
+            pass
+        return None
+    
     def reset_cache(self):
-        print("Resetting stage calculation cache")
+        """Clear the memoization cache for new calculations"""
         self.calculated_adjustments = {}
         self.expression_evaluator.set_calculated_adjustments(self.calculated_adjustments)

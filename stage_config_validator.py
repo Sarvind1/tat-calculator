@@ -23,7 +23,7 @@ class StageConfigValidator:
         self.supported_functions = ['max', 'add_days']
         self.required_fields = {
             'stage': ['name', 'actual_timestamp', 'preceding_stage', 'process_flow', 'fallback_calculation', 'lead_time'],
-            'process_flow': ['critical_path', 'parallel_processes', 'process_type', 'team_owner', 'handoff_points'],
+            'process_flow': ['critical_path', 'parallel_processes', 'process_type', 'team_owner'],
             'fallback_calculation': ['expression']
         }
     
@@ -122,9 +122,6 @@ class StageConfigValidator:
         # Check required fields
         for field in self.required_fields['stage']:
             if field not in stage_config:
-                if field == 'handoff_points':
-                    # This is in process_flow, check there
-                    continue
                 self._add_error("MISSING_FIELD", f"Missing required field '{field}'", context)
         
         # Validate each field
@@ -201,13 +198,6 @@ class StageConfigValidator:
             self._add_error("MISSING_FIELD", "process_flow is required", context)
             return
         
-        # Check required fields
-        for field in self.required_fields['process_flow']:
-            if field not in process_flow:
-                if field == 'handoff_points':
-                    self._add_error("MISSING_FIELD", f"Missing required field 'handoff_points' in process_flow", context)
-                else:
-                    self._add_error("MISSING_FIELD", f"Missing required field '{field}' in process_flow", context)
         
         # Validate field types
         if 'critical_path' in process_flow and not isinstance(process_flow['critical_path'], bool):
@@ -217,9 +207,6 @@ class StageConfigValidator:
             if not isinstance(process_flow['parallel_processes'], list):
                 self._add_error("VALIDATION", "parallel_processes must be array", context)
         
-        if 'handoff_points' in process_flow:
-            if not isinstance(process_flow['handoff_points'], list):
-                self._add_error("VALIDATION", "handoff_points must be array", context)
     
     def _validate_fallback_calculation(self, fallback_calc: Dict[str, Any], context: str):
         """Validate fallback_calculation configuration"""

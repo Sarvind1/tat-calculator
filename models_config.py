@@ -18,7 +18,7 @@ class ProcessFlow(BaseModel):
     """Process flow metadata for a stage"""
     critical_path: bool
     parallel_processes: List[str] = Field(default_factory=list)
-    handoff_points: List[str] = Field(default_factory=list)
+    # handoff_points: List[str] = Field(default_factory=list)
     process_type: str
     team_owner: str
 
