@@ -139,7 +139,7 @@ class DelayCalculator:
             except Exception as e:
                 logger.warning(f"Failed to parse timestamp '{timestamp}': {e}")
         
-        logger.warning(f"No valid target timestamp found in stage result: {stage_result.get('name', 'Unknown')}")
+        # logger.warning(f"No valid target timestamp found in stage result: {stage_result.get('name', 'Unknown')}")
         return None
     
     def _get_actual_timestamp(self, field_name: str, po_row: pd.Series) -> Optional[datetime]:
@@ -316,7 +316,7 @@ class DelayCalculator:
             if team_data:
                 pd.DataFrame(team_data).to_excel(writer, sheet_name='Team Performance', index=False)
         
-        logger.info(f"Delay report exported to: {output_file}")
+        # logger.info(f"Delay report exported to: {output_file}")
     
     def save_delay_analysis_csv(self, delay_results: List[Dict[str, Any]], filename_prefix: str = "delay_analysis") -> str:
         """
@@ -343,5 +343,5 @@ class DelayCalculator:
                 csv_data.append(delay)
         
         pd.DataFrame(csv_data).to_csv(filename, index=False)
-        logger.info(f"Delay analysis CSV saved to: {filename}")
+        # logger.info(f"Delay analysis CSV saved to: {filename}")
         return filename

@@ -146,7 +146,7 @@
         "team_owner": "Procurement"
       },
       "fallback_calculation": {
-        "expression": "max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt -21),stage_8+plt-21)"
+        "expression": "max(prd_reconfirmed_date, add_days(receive_first_prd_date, plt-21),stage_8+plt-21)"
       },
       "lead_time": 1
     },

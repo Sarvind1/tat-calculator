@@ -49,7 +49,7 @@ logger = logging.getLogger(__name__)
 class TATRunner:
     """Complete TAT calculation runner with enhanced reporting, organized outputs, and integrated delays"""
     
-    def __init__(self, excel_file: str = "ts_big.xlsx", config_file: str = "stages_config.json"):
+    def __init__(self, excel_file: str = "ts_small_1.xlsx", config_file: str = "stages_config.json"):
         self.excel_file = excel_file
         self.config_file = config_file
         self.df = None
@@ -59,11 +59,11 @@ class TATRunner:
         
         # Ensure output folders exist
         self.output_folders = setup_output_folders()
-        logger.info(f"Output folders created: {self.output_folders}")
+        # logger.info(f"Output folders created: {self.output_folders}")
         
     def setup(self):
         """Set up the calculator and load data"""
-        logger.info("Setting up TAT calculation environment...")
+        # logger.info("Setting up TAT calculation environment...")
         
         # Load Excel data
         self.load_excel_data()
@@ -71,15 +71,15 @@ class TATRunner:
         # Initialize calculator
         self.initialize_calculator()
         
-        logger.info("Setup completed successfully!")
+        # logger.info("Setup completed successfully!")
         
     def load_excel_data(self):
         """Load and prepare Excel data"""
-        logger.info(f"Loading Excel file: {self.excel_file}")
+        # logger.info(f"Loading Excel file: {self.excel_file}")
         
         try:
             self.df = pd.read_excel(self.excel_file)
-            logger.info(f"Loaded {len(self.df)} rows and {len(self.df.columns)} columns")
+            # logger.info(f"Loaded {len(self.df)} rows and {len(self.df.columns)} columns")
             
             # Clean column names
             self.df.columns = self.df.columns.str.strip()
@@ -91,7 +91,7 @@ class TATRunner:
             self.validate_required_columns()
             
         except Exception as e:
-            logger.error(f"Error loading Excel file: {e}")
+            # logger.error(f"Error loading Excel file: {e}")
             raise
             
     def convert_date_columns(self):
@@ -117,8 +117,8 @@ class TATRunner:
                 missing_count = self.df[col].isna().sum()
                 total_count = len(self.df)
                 
-                logger.info(f"Converted {col}: {original_type} -> datetime, "
-                          f"{missing_count}/{total_count} missing ({missing_count/total_count*100:.1f}%)")
+                # logger.info(f"Converted {col}: {original_type} -> datetime, "
+                        #   f"{missing_count}/{total_count} missing ({missing_count/total_count*100:.1f}%)")
     
     def validate_required_columns(self):
         """Validate that required columns exist"""
@@ -128,40 +128,40 @@ class TATRunner:
         if missing_columns:
             raise ValueError(f"Missing required columns: {missing_columns}")
             
-        logger.info("All required columns present")
+        # logger.info("All required columns present")
     
     def initialize_calculator(self):
         """Initialize the TAT calculator"""
-        logger.info(f"Initializing TAT Calculator with config: {self.config_file}")
+        # logger.info(f"Initializing TAT Calculator with config: {self.config_file}")
         
         try:
             # Import the new modular TATCalculator
             from tat_calculator_main import TATCalculator
             self.calculator = TATCalculator(self.config_file)
-            logger.info("TAT Calculator initialized successfully")
+            # logger.info("TAT Calculator initialized successfully")
             
         except ImportError:
             # Fallback to old monolithic version if new modules not available
-            logger.warning("New modular TATCalculator not available, trying old version...")
+            # logger.warning("New modular TATCalculator not available, trying old version...")
             try:
                 from tat_calculator import TATCalculator
                 self.calculator = TATCalculator(self.config_file)
-                logger.info("TAT Calculator (old version) initialized successfully")
+                # logger.info("TAT Calculator (old version) initialized successfully")
             except ImportError:
-                logger.error("No TATCalculator available. Please ensure tat_calculator_main.py or tat_calculator.py is in the same directory.")
+                # logger.error("No TATCalculator available. Please ensure tat_calculator_main.py or tat_calculator.py is in the same directory.")
                 raise
         except Exception as e:
-            logger.error(f"Error initializing calculator: {e}")
+            # logger.error(f"Error initializing calculator: {e}")
             raise
     
     def run_calculations(self, sample_size: int = None, include_detailed_delays: bool = True):
         """Run TAT calculations with integrated delay information"""
         if sample_size:
             df_to_process = self.df.head(sample_size)
-            logger.info(f"Processing sample of {sample_size} POs")
+            # logger.info(f"Processing sample of {sample_size} POs")
         else:
             df_to_process = self.df
-            logger.info(f"Processing all {len(df_to_process)} POs")
+            # logger.info(f"Processing all {len(df_to_process)} POs")
         
         self.results = []
         self.delay_results = []
@@ -171,21 +171,21 @@ class TATRunner:
         has_integrated_delays = hasattr(self.calculator, 'process_batch_with_delays')
         
         if has_integrated_delays and include_detailed_delays:
-            logger.info("Using integrated delay calculation...")
+            # logger.info("Using integrated delay calculation...")
             try:
                 # New method: get both TAT results with delays and detailed delay analysis
                 self.results, self.delay_results = self.calculator.process_batch_with_delays(df_to_process)
-                logger.info(f"Completed calculations with integrated delays: {len(self.results)} TAT results, {len(self.delay_results)} delay analyses")
+                # logger.info(f"Completed calculations with integrated delays: {len(self.results)} TAT results, {len(self.delay_results)} delay analyses")
                 return self.results
             except Exception as e:
-                logger.warning(f"Error with integrated delay calculation, falling back to individual processing: {e}")
+                # logger.warning(f"Error with integrated delay calculation, falling back to individual processing: {e}")
                 has_integrated_delays = False
         
         # Fallback to individual processing
         for index, row in df_to_process.iterrows():
             try:
                 po_id = row.get('po_razin_id', f'Row_{index}')
-                logger.info(f"Processing PO {index + 1}/{len(df_to_process)}: {po_id}")
+                # logger.info(f"Processing PO {index + 1}/{len(df_to_process)}: {po_id}")
                 
                 # Calculate TAT with integrated delays
                 if hasattr(self.calculator.calculate_tat, '__code__') and 'include_delays' in self.calculator.calculate_tat.__code__.co_varnames:
@@ -208,9 +208,9 @@ class TATRunner:
                     'traceback': traceback.format_exc()
                 }
                 errors.append(error_info)
-                logger.error(f"Error processing row {index}: {e}")
+                # logger.error(f"Error processing row {index}: {e}")
         
-        logger.info(f"Completed calculations: {len(self.results)} successful, {len(errors)} errors")
+        # logger.info(f"Completed calculations: {len(self.results)} successful, {len(errors)} errors")
         
         if errors:
             self.save_errors(errors)
@@ -224,12 +224,12 @@ class TATRunner:
         
         with open(error_file, 'w') as f:
             json.dump(errors, f, indent=2)
-        logger.info(f"Error details saved to: {error_file}")
+        # logger.info(f"Error details saved to: {error_file}")
     
     def save_results(self, filename_prefix: str = "tat_results_with_delays"):
         """Save TAT calculation results with integrated delay information"""
         if not self.results:
-            logger.warning("No results to save")
+            # logger.warning("No results to save")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -238,13 +238,13 @@ class TATRunner:
         with open(filename, 'w') as f:
             json.dump(self.results, f, indent=2, default=str)
         
-        logger.info(f"TAT results with delays saved to: {filename}")
+        # logger.info(f"TAT results with delays saved to: {filename}")
         return filename
     
     def save_delay_results(self, filename_prefix: str = "detailed_delay_analysis"):
         """Save detailed delay analysis results"""
         if not self.delay_results:
-            logger.warning("No detailed delay results to save")
+            # logger.warning("No detailed delay results to save")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -253,13 +253,13 @@ class TATRunner:
         with open(filename, 'w') as f:
             json.dump(self.delay_results, f, indent=2, default=str)
         
-        logger.info(f"Detailed delay results saved to: {filename}")
+        # logger.info(f"Detailed delay results saved to: {filename}")
         return filename
     
     def export_to_excel(self, filename_prefix: str = "tat_export_with_delays"):
         """Export original data + calculated timestamps + delay info to Excel"""
         if not self.results:
-            logger.warning("No results to export")
+            # logger.warning("No results to export")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -272,12 +272,12 @@ class TATRunner:
     def export_stage_level_excel(self, filename_prefix: str = "stage_level_analysis"):
         """Export stage-level data to Excel with 3 tabs: actual_timestamps, timestamps, delay_days"""
         if not self.results:
-            logger.warning("No results to export")
+            # logger.warning("No results to export")
             return
         
         # Check if calculator supports stage-level export
         if not hasattr(self.calculator, 'export_stage_level_excel'):
-            logger.warning("Stage-level Excel export not available in current calculator version")
+            # logger.warning("Stage-level Excel export not available in current calculator version")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -290,11 +290,11 @@ class TATRunner:
     def export_delay_report(self, filename_prefix: str = "detailed_delay_report"):
         """Export detailed delay analysis report to Excel"""
         if not self.delay_results:
-            logger.warning("No detailed delay results to export")
+            # logger.warning("No detailed delay results to export")
             return
         
         if not hasattr(self.calculator, 'export_delay_report'):
-            logger.warning("Detailed delay report export not available in current calculator version")
+            # logger.warning("Detailed delay report export not available in current calculator version")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
@@ -307,14 +307,14 @@ class TATRunner:
     def save_processed_csv(self, filename_prefix: str = "processed_data"):
         """Save processed CSV data to organized csv_files folder"""
         if self.df is None:
-            logger.warning("No data to save as CSV")
+            # logger.warning("No data to save as CSV")
             return
         
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = f"outputs/csv_files/{filename_prefix}_{timestamp}.csv"
         
         self.df.to_csv(filename, index=False)
-        logger.info(f"Processed CSV saved to: {filename}")
+        # logger.info(f"Processed CSV saved to: {filename}")
         return filename
     
     def print_delay_summary(self):
@@ -323,8 +323,8 @@ class TATRunner:
             print("No results available for delay summary")
             return
         
-        print("\n📊 Delay Summary from TAT Results:")
-        print("=" * 50)
+        # print("\n📊 Delay Summary from TAT Results:")
+        # print("=" * 50)
         
         total_delayed = 0
         total_early = 0
@@ -358,22 +358,14 @@ class TATRunner:
             
             # Check delay summary if available
             delay_summary = result.get('summary', {}).get('delay_summary')
-            if delay_summary:
-                print(f"PO {result['po_id']}: {delay_summary.get('delayed_stages', 0)} delayed stages, "
-                      f"{delay_summary.get('total_delay_days', 0)} total delay days")
-        
-        print(f"\n🎯 Overall Statistics:")
-        print(f"   Delayed stages: {total_delayed}")
-        print(f"   Early stages: {total_early}")
-        print(f"   On-time stages: {total_on_time}")
-        print(f"   Overdue stages: {total_pending_overdue}")
-        print(f"   Worst delay: {max_delay} days ({worst_po})")
+   
+
 
 
 def main():
     """Main execution function"""
-    print("TAT Calculation System with Stage-Level Analysis - Starting...")
-    print("=" * 70)
+    # print("TAT Calculation System with Stage-Level Analysis - Starting...")
+    # print("=" * 70)
     
     try:
         # Initialize runner
@@ -384,7 +376,7 @@ def main():
         
         # Run calculations (start with sample for testing)
         sample_size = 5  # Process first 5 POs for testing
-        print(f"\nRunning calculations on sample of {sample_size} POs...")
+        # print(f"\nRunning calculations on sample of {sample_size} POs...")
         results = runner.run_calculations(sample_size=sample_size, include_detailed_delays=True)
         
         if results:
@@ -400,50 +392,11 @@ def main():
             excel_file = runner.export_to_excel()
             stage_level_file = runner.export_stage_level_excel()
             delay_report_file = runner.export_delay_report()
-            
-            print(f"\n📁 Organized Output Structure:")
-            print(f"├── outputs/")
-            print(f"    ├── tat_results/")
-            print(f"    │   └── {os.path.basename(results_file) if results_file else 'No TAT results'}")
-            print(f"    │       (includes delay_days & delay_status for each stage)")
-            print(f"    ├── delay_results/")
-            print(f"    │   └── {os.path.basename(delay_results_file) if delay_results_file else 'No detailed delay results'}")
-            print(f"    │       (detailed delay analysis with insights)")
-            print(f"    ├── excel_exports/")
-            print(f"    │   ├── {os.path.basename(excel_file) if excel_file else 'No Excel export'}")
-            print(f"    │   │   (includes delay columns: Stage_Delay_Days, Stage_Status)")
-            print(f"    │   ├── {os.path.basename(stage_level_file) if stage_level_file else 'No stage-level export'}")
-            print(f"    │   │   ⭐ (3 tabs: actual_timestamps, timestamps, delay_days)")
-            print(f"    │   └── {os.path.basename(delay_report_file) if delay_report_file else 'No delay report'}")
-            print(f"    ├── csv_files/")
-            print(f"    │   └── {os.path.basename(processed_csv_file) if processed_csv_file else 'No CSV file'}")
-            print(f"    └── logs/")
-            print(f"        └── tat_calculation.log")
-            
-            print(f"\n✅ New Feature: Stage-Level Excel Export!")
-            print(f"   📋 actual_timestamps tab: Actual timestamps from PO data")
-            print(f"   ⏱️  timestamps tab: Calculated timestamps from TAT processing")
-            print(f"   📊 delay_days tab: Delay days for each stage")
-            print(f"   Format: PO_ID vs All Stages in matrix layout")
-            
-            # Show example of stage-level output structure
-            if stage_level_file:
-                print(f"\n💡 Stage-Level Excel Structure:")
-                print(f"   Tab 1: actual_timestamps")
-                print(f"   ┌─────────────┬──────────────────┬─────────────────┬───")
-                print(f"   │ PO_ID       │ 01. PO Approval  │ 02. Supplier... │ ...")
-                print(f"   ├─────────────┼──────────────────┼─────────────────┼───")
-                print(f"   │ PO123...    │ 2025-06-01       │ 2025-06-03      │ ...")
-                print(f"   └─────────────┴──────────────────┴─────────────────┴───")
-                print(f"   ")
-                print(f"   Tab 2: timestamps (calculated)")
-                print(f"   Tab 3: delay_days (difference analysis)")
-            
-        print(f"\n💡 To process all POs, change sample_size=None in the run_calculations() call")
-        print("🎯 TAT Calculation with stage-level analysis completed successfully!")
+
+
         
     except Exception as e:
-        logger.error(f"Error in main execution: {e}")
+        # logger.error(f"Error in main execution: {e}")
         print(f"❌ Error: {e}")
         print("📋 See outputs/logs/tat_calculation.log for detailed error information")
 

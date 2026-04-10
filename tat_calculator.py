@@ -364,6 +364,7 @@ class TATCalculator:
 
         # 1. Calculate precedence-based timestamp
         precedence_timestamp = None
+        print ("stage.preceding_stage", stage.preceding_stage)
         if stage.preceding_stage:
             dependencies = []
             preceding_timestamps = []
@@ -387,7 +388,9 @@ class TATCalculator:
                         })
             
             calc_details["dependencies"] = dependencies
+            print ("preceding_timestamps", preceding_timestamps)
             if preceding_timestamps:
+                print ("I have entered the precedence adding block")
                 base_timestamp = max(preceding_timestamps)
                 precedence_timestamp = base_timestamp #
                 calc_details["precedence_value"] = precedence_timestamp.isoformat()
@@ -658,7 +661,7 @@ class TATCalculator:
         
         # Save to Excel
         export_df.to_excel(output_file, index=False)
-        logger.info(f"Results exported to: {output_file}")
+        # logger.info(f"Results exported to: {output_file}")
 
 
 if __name__ == "__main__":

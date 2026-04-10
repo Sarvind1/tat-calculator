@@ -103,8 +103,8 @@ class TATProcessor:
                 "process_flow": {
                     "team_owner": stage_config.process_flow.team_owner,
                     "process_type": stage_config.process_flow.process_type,
-                    "critical_path": stage_config.process_flow.critical_path,
-                    "handoff_points": stage_config.process_flow.handoff_points
+                    "critical_path": stage_config.process_flow.critical_path
+                    # "handoff_points": stage_config.process_flow.handoff_points
                 },
                 "dependencies": calc_details.get("dependencies", []) if isinstance(calc_details, dict) else []
             }
@@ -282,7 +282,7 @@ class TATProcessor:
             })
         elif method == "precedence_only":
             summary.update({
-                "precedence_date": calc_details.get("precedence_date"),
+                "precedence_date": calc_details.get("precedence_value"),
                 "reason": "No actual timestamp available"
             })
         elif method == "actual_only":
@@ -316,9 +316,9 @@ class TATProcessor:
             try:
                 result = self.calculate_tat(row, include_delays=include_delays)
                 results.append(result)
-                logger.info(f"Processed PO: {result['po_id']}")
+                # logger.info(f"Processed PO: {result['po_id']}")
             except Exception as e:
-                logger.error(f"Error processing row {index}: {e}")
+                # logger.error(f"Error processing row {index}: {e}")
                 results.append({
                     "po_id": row.get('po_razin_id', f'Row_{index}'),
                     "error": str(e),
@@ -377,7 +377,7 @@ class TATProcessor:
         
         # Save to Excel
         export_df.to_excel(output_file, index=False)
-        logger.info(f"Results exported to: {output_file}")
+        # logger.info(f"Results exported to: {output_file}")
     
     def export_stage_level_excel(self, df: pd.DataFrame, results: List[Dict[str, Any]], output_file: str):
         """
@@ -460,10 +460,10 @@ class TATProcessor:
             calculated_df.to_excel(writer, sheet_name='timestamps', index=False)
             delay_df.to_excel(writer, sheet_name='delay_days', index=False)
         
-        logger.info(f"Stage-level results exported to: {output_file}")
-        logger.info(f"  - actual_timestamps tab: {len(po_ids)} POs x {len(stage_configs)} stages")
-        logger.info(f"  - timestamps tab: {len(po_ids)} POs x {len(stage_configs)} stages")  
-        logger.info(f"  - delay_days tab: {len(po_ids)} POs x {len(stage_configs)} stages")
+        # logger.info(f"Stage-level results exported to: {output_file}")
+        # logger.info(f"  - actual_timestamps tab: {len(po_ids)} POs x {len(stage_configs)} stages")
+        # logger.info(f"  - timestamps tab: {len(po_ids)} POs x {len(stage_configs)} stages")  
+        # logger.info(f"  - delay_days tab: {len(po_ids)} POs x {len(stage_configs)} stages")
     
     def save_to_csv(self, df: pd.DataFrame, filename_prefix: str = "processed_data") -> str:
         """
@@ -483,5 +483,5 @@ class TATProcessor:
         Path(filename).parent.mkdir(parents=True, exist_ok=True)
         
         df.to_csv(filename, index=False)
-        logger.info(f"CSV saved to: {filename}")
+        # logger.info(f"CSV saved to: {filename}")
         return filename

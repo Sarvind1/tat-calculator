@@ -112,9 +112,11 @@ class StageCalculator:
             fallback_result, fallback_formula = self.expression_evaluator.evaluate_expression(
                 stage.fallback_calculation.expression, po_row
             )
-            print("Fallback", fallback_result)
+            # print("Fallback", stage.name ,fallback_result, "end")
             if fallback_result:
+                # print ("I have entered the fallback adding block",type(fallback_result),type(timedelta(days=stage.lead_time)))
                 final_timestamp = fallback_result + timedelta(days=stage.lead_time)
+                # print ("final_timestamp", final_timestamp)
                 calc_details["method"] = "fallback"
                 calc_details["source"] = stage.fallback_calculation.expression
                 calc_details["target_date"] = fallback_result.isoformat()
@@ -144,7 +146,6 @@ class StageCalculator:
                 calc_details["actual_value"] = actual_timestamp.isoformat()
         
         # 4. Determine final timestamp and method (ORIGINAL LOGIC)
-        final_timestamp = None
         if precedence_timestamp and actual_timestamp:
             if actual_timestamp >= precedence_timestamp:
                 final_timestamp = actual_timestamp

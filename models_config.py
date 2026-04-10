@@ -18,7 +18,7 @@ class ProcessFlow(BaseModel):
     """Process flow metadata for a stage"""
     critical_path: bool
     parallel_processes: List[str] = Field(default_factory=list)
-    handoff_points: List[str] = Field(default_factory=list)
+    # handoff_points: List[str] = Field(default_factory=list)
     process_type: str
     team_owner: str
 
@@ -35,7 +35,7 @@ class StageConfig(BaseModel):
     preceding_stage: Optional[Union[str, List[str]]] = None
     process_flow: ProcessFlow
     fallback_calculation: FallbackCalculation
-    lead_time: int = Field(ge=0, description="Lead time in days")
+    lead_time: str = Field(description="Lead time in days")
 
 
 class StagesConfig(BaseModel):
